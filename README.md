@@ -8,7 +8,9 @@ See [deliverables/scoring.md](deliverables/scoring.md).
 See [deliverables/simple-baseline.md](deliverables/simple-baseline.md).
 ## Milestone 3
 ### Literature review
+See [deliverables/lit-review.md](deliverables/lit-review.md). At least, two interpretable questions are focused: 
 
-**Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).**
-
-This is unsupervised learning (not using true similarities in gs file) with similarities of each pair just from cosine similarity of sentence embeddings. The sentence embeddings is sent2vec.
+1. whether or not the method utilizes gold-standard similarities;
+2. choice of sentence embeddings.
+### Published basline
+See [deliverables/baseline.md](deliverables/baseline.md) for our published baseline.
