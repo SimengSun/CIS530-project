@@ -1,5 +1,5 @@
-### Milestone 3
-# Literature review
+## Milestone 3
+### Literature review
 
 **Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).**
 
