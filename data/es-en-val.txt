@@ -1,0 +1,20 @@
+bulb C and A are contained in the same path with the battery	A y C están en circuitos distintos	1.6
+A man is playing the guitar.	Un hombre está tocando la batería.	1.556
+European markets rise on Greek bailout hopes	Los ministros europeos se preparan para aprobar el rescate de Grecia	2.2
+Un hombre está cabalgando.	A woman is riding an elephant.	1.533
+A man is playing a flute in a band.	Un hombre está tocando la guitarra.	1.6
+Bangkok tense on Thai election eve	Bangladés: Aumenta la ofensiva de cara a las elecciones	2.2
+I don't know if this goes for people generally, but that was how it went.	Sé que les molesta a ustedes los socialistas o progresistas, pero así es como son las cosas.	1.5
+A white cat standing on a carpet.	Un bonito gato de rayas blancas con la cabeza colgando del borde de la mesa.	1.6
+A man riding a white horse.	Una mujer que dirige a un caballo blanco.	1.8
+Turkmenistan borders Afghanistan.	Sistán y Baluchistán tiene frontera con Afganistán y Pakistán.	1.8
+A small red and gray bird perched amongst the bare branches of a tree.	Un pájaro rojo y marrón está posado en una rama.	2.25
+Bush gets zero credit for the budget under him.	Y Obama no recibe ningún crédito para el presupuesto oficial.	1.8
+Doce muertos en atentado de bomba en tren pakistaní	Five killed by bomb blast in East India	1.0
+Hombre detenido por un doble asesinato	WA man arrested in police drug raid	0.8
+Nato airstrike kills two Afghan kids	Soldado de la OTAN muere en Afganistán	1.2
+A little girl in a red shirt pulls a kite.	Una niña que viste una camiseta roja toma una fotografía con un teléfono.	1.4
+Un hombre está tocando la guitarra.	A man is driving a car.	0.5
+all the bulbs are on parralel paths	A y C están en circuitos distintos	1.2
+MIER ups 2012 growth forecast to 4.2pc	CMIE reduce a un 6,3 % las previsiones de crecimiento para el periodo de 2012-2013	0.8
+Un hombre está cabalgando.	A man is talking on a phone.	1.0

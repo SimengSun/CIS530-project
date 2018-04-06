@@ -1,0 +1,23 @@
+the act of concealing or disguising	la acción de salir de algo.	0.6
+A white dog with red ears is running in the snow.	un perro negro mojado con un collar rojo está en el río	0.6
+Terremoto de magnitud 4,1 sacude a los Estados Unidos	7.2 magnitude earthquake strikes Philippines	1.0
+Decenas de muertos en disturbios en Nigeria	Dozens killed in Kenyan clashes	1.0
+Siete muertos en tiroteo en una escuela cristiana	5 wounded in Ohio school shooting	1.4
+Una persona está revolviendo el arroz.	A woman is cracking an egg.	1.0
+(La acción de hacer) una medida de algo.	the act of making up your mind about something.	1.0
+A man is opening a box using a knife.	Un hombre está tocando la guitarra.	0.0
+A man is kicking oots of water.	Una mujer está cortando un pimiento rojo.	0.25
+la raíz de una palabra	the removal of an opponent's piece from the chess board.	0.0
+Un hombre está tocando la batería.	A woman is slicing some leaves.	0.0
+Una niña que lleva puesto un casco con una bicicleta de fondo.	A women holds a small dog on a leash with chairs in the background.	0.0
+Una mujer está pelando los camarones.	A man is dancing in rain.	0.0
+Todos los ojos están puestos en Raheel Sharif, el nuevo jefe del ejército pakistaní	Flood alerts in France as river levels rise	0.0
+Create a coating for something.	la acción de salir de algo.	0.0
+Un niño vestido de rojo saltando a un arenero.	A dog swimming in a pond	0.0
+medir el tiempo o la duración de	make weak by stunting the growth or development of.	0.0
+Obama jamás pronunció la palabra "amenaza" o "amenazar". 	they found the bomb before they found the woman.	0.0
+A woman is slicing meat with a knife.	Un hombre está estirando la masa.	0.417
+una persona que es miembro de la cámara de senadores	a person who is a member of a partnership.	0.4
+the act of confining, preventing or blocking something	La acción de referirse o consultar.	0.0
+(La acción de tomar) una medida de algo.	the act of removing or getting rid of something.	0.4
+Una vaca está comiendo hierba.	A dog is pulling a girl down a hill.	0.0
