@@ -1,7 +1,7 @@
 # Semantic textual similarity
 ## Milestone 2
 ### Data 
-See [data/data.md](data/data.md).
+See [data/data.md](data/data.md) for our specification while [data/](data/) contains both `.pkl` files and reader-friendly `.txt` files.
 ### Evaluation 
 See [deliverables/scoring.md](deliverables/scoring.md). To be concise, there are three evluation criteria:
 1. Pearson correlation suggested by [^fn1].
