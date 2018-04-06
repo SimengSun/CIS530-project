@@ -1,3 +1,6 @@
+## Milestone 2
+### data 
+See (data)[data/data.md] for specification.
 ## Milestone 3
 ### Literature review
 
