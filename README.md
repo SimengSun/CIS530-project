@@ -1,6 +1,11 @@
+# Semantic textual similarity
 ## Milestone 2
-### data 
-See (data)[data/data.md] for specification.
+### Data 
+See [data/data.md](data/data.md).
+### Evaluation 
+See [deliverables/scoring.md](deliverables/scoring.md).
+### Simple baseline
+See [deliverables/simple-baseline.md](deliverables/simple-baseline.md).
 ## Milestone 3
 ### Literature review
 
