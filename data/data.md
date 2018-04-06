@@ -38,3 +38,6 @@ split-xx.pkl: contains 80%/20% split of training/development data
             }
            
  [1] <https://www.aclweb.org/anthology/S/S17/S17-2001.pdf>
+
+----------
+Run `python3 data/pkl2txt.py` to get reader-friendly TXT file.
