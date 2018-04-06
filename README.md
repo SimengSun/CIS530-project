@@ -7,6 +7,8 @@ See [deliverables/scoring.md](deliverables/scoring.md). To be concise, there are
 1. Pearson correlation suggested by [^fn1].
 2. ranking criteria (of two sequences of similarities);
 3. double check of similarities for pairs with underlying 5.0, 0.0 similarities.
+
+Unfortunately, we have not found references for the latter two more convincing/ intepretable evaluation criteria.
 ### Simple baseline
 See [deliverables/simple-baseline.md](deliverables/simple-baseline.md).
 ## Milestone 3
