@@ -12,4 +12,11 @@ For example:
 
        $ python3 evaluate.py --goldfile STS.gs.track5.en-en.txt --predfile STS.pred.track5.en-en.txt
 
+
+However, since we do not see Pearson correlation interpretable, we propose two additional criteria:
+1. ranking criteria (of two sequences of similarities);
+2. double check of similarities for pairs with underlying 5.0, 0.0 similarities.
+
+
+
 [1] <https://www.aclweb.org/anthology/S/S17/S17-2001.pdf>
