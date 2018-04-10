@@ -1,0 +1,1 @@
+`python3 baselines.py --pairfile ../data/en-train.txt --valfile ../data/en-test.txt --valfile data/en-val.txt --predfile ../data/pred-en.txt --v 1`

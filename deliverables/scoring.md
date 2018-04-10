@@ -6,11 +6,12 @@ The official score is based on weighted Pearson correlation between predicted si
 `evaluation.py` is the evaluation script. The following script returns the correlation for individual pairs:
 
 
-       $ python3 evaluation.py --goldfile [gold standard file] -- predfile [prediction file]
+       $ python3 evaluate.py --goldfile [gold standard file] -- predfile [prediction file]
        
 For example:
 
        $ python3 evaluate.py --goldfile STS.gs.track5.en-en.txt --predfile STS.pred.track5.en-en.txt
+       $ python3 evaluate.py --goldfile ../data/en-val.txt --predfile ../data/pred-en.txt
 
 
 However, since we do not see Pearson correlation interpretable, we propose two additional criteria:
