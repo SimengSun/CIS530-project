@@ -4,9 +4,10 @@ import argparse
 import difflib
 from googletrans import Translator
 import numpy as np
+import pickle
 translator = Translator()
 import time
-import pdb
+# import pdb
 
 from nltk.corpus import wordnet as wn
 
@@ -18,20 +19,13 @@ parser.add_argument('--valfile', type=str, required=True)
 parser.add_argument('--predfile', type=str, required=True)
 parser.add_argument('--v', type=int, required=True)
 
-def get_ppdb(fname):
-    ppdb = {}
-    with open(fname, 'r') as f:
-        for line in f.readlines():
-            sp = line.split('|||')
-            w1, w2 = sp[1], sp[2]
-            score = sp[3].split()[0].replace('PPDB2.0Score=', '').lstrip().rstrip()
-            ppdb[(w1, w2)] = float(score)
-            ppdb[(w2, w1)] = float(score)
-    return ppdb
-
-ppdb = get_ppdb('../ppdb-2.0-l-lexical')
-print('end loading ppdb-2.0-l')
-pdb.set_trace()
+# def get_ppdb(fname):
+#     with open(fname, 'rb') as f:
+#         ppdb = pickle.load(f)
+#     return ppdb
+#
+# ppdb = get_ppdb('../ppdb-filter')
+# print('end loading ppdb-filter')
 
 #--------------------
 def sentence_similarity_simple_baseline(s1, s2):
@@ -78,6 +72,7 @@ def tagged_to_synset(word, tag):
     except:
         return None
 
+notin_cnt = [0]
 # =========== feature extraction ==============
 def sentence_similarity_word_alignment(sentence1, sentence2):
     """ compute the sentence similarity using Wordnet and ppdb """
@@ -100,14 +95,21 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
         L = [l for l in L if l]
 
         # compute ppdb score
-        if len(L) > 0 and max(L) > 0.6:
-            align_cnt += 1
-            ss2 = synsets2[L_prime.index(max(L))]
-            w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
-            if (w1, w2) in ppdb:
-                ppdb_score += ppdb[(w1, w2)]
-            else:
-                ppdb_score += 4.5
+        # if len(L) > 0 and max(L) > 0.6:
+        #     align_cnt += 1
+        #     ss2 = synsets2[L_prime.index(max(L))]
+        #     w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
+        #     if (w1, w2) in ppdb:
+        #         ppdb_score += ppdb[(w1, w2)]
+        #     elif (w2, w1) in ppdb:
+        #         ppdb_score += ppdb[(w2, w1)]
+        #     else:
+        #         if w2 == w1:
+        #             ppdb_score += 5
+        #         else:
+        #             ppdb_score += 0
+        #         notin_cnt[0] += 1
+
 
         # Check that the similarity could have been computed
 
@@ -119,9 +121,9 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
     if count >0: score /= count
 
     # ppdb_wa_pen_ua features
-    len_s1, len_s2 = len(sentence1), len(sentence2)
-    ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
-    return score, ppdb_score
+    # len_s1, len_s2 = len(sentence1), len(sentence2)
+    # ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
+    return score#, ppdb_score
 
 def extract_overlap_pen(s1, s2):
     """
@@ -136,6 +138,42 @@ def extract_overlap_pen(s1, s2):
         ovlp_cnt += ss2.count(w1)
     score = 2 * ovlp_cnt / (len(ss1) + len(ss2) + .0)
     return score
+
+def extract_absolute_difference(s1, s2):
+    """t \in {all tokens, adjectives, adverbs, nouns, and verbs}"""
+    s1, s2 = word_tokenize(s1), word_tokenize(s2)
+    pos1, pos2 = pos_tag(s1), pos_tag(s2)
+    # all tokens
+    t1 = abs(len(s1) - len(s2)) / float(len(s1) + len(s2))
+    # all adjectives
+    cnt1 = len([1 for item in pos1 if item[1].startswith('J')])
+    cnt2 = len([1 for item in pos2 if item[1].startswith('J')])
+    if cnt1 == 0 and cnt2 == 0:
+        t2 = 0
+    else:
+        t2 = abs(cnt1 - cnt2) / float(cnt1 + cnt2)
+    # all adverbs
+    cnt1 = len([1 for item in pos1 if item[1].startswith('R')])
+    cnt2 = len([1 for item in pos2 if item[1].startswith('R')])
+    if cnt1 == 0 and cnt2 == 0:
+        t3 = 0
+    else:
+        t3 = abs(cnt1 - cnt2) / float(cnt1 + cnt2)
+    # all nouns
+    cnt1 = len([1 for item in pos1 if item[1].startswith('N')])
+    cnt2 = len([1 for item in pos2 if item[1].startswith('N')])
+    if cnt1 == 0 and cnt2 == 0:
+        t4 = 0
+    else:
+        t4 = abs(cnt1 - cnt2) / float(cnt1 + cnt2)
+    # all verbs
+    cnt1 = len([1 for item in pos1 if item[1].startswith('V')])
+    cnt2 = len([1 for item in pos2 if item[1].startswith('V')])
+    if cnt1 == 0 and cnt2 == 0:
+        t5 = 0
+    else:
+        t5 = abs(cnt1 - cnt2) / float(cnt1 + cnt2)
+    return [t1, t2, t3, t4, t5]
 
 #--------------------
 # from sklearn.svm import SVC, LinearSVC
@@ -165,14 +203,15 @@ def main(args):
         s1 = first_sents[i]
         s2 = second_sents[i]
         scores = [ #sentence_similarity_simple_baseline(s1,s2),
-                   *sentence_similarity_word_alignment(s1,s2),
-                   extract_overlap_pen(s1, s2)
+                   sentence_similarity_word_alignment(s1,s2),
+                   extract_overlap_pen(s1, s2),
+                    *extract_absolute_difference(s1, s2)
                    ]
         # cosine similarity
         feature_scores.append(scores)
         if i % 100 == 0:
             print('end ', i)
-    pdb.set_trace()
+
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
     clf = LinearRegression(); clf.fit(X_features, true_score)
@@ -195,9 +234,9 @@ def main(args):
         s1 = first_sents[i]
         s2 = second_sents[i]
         scores = [ #sentence_similarity_simple_baseline(s1,s2),
-                   *sentence_similarity_word_alignment(s1,s2),
-                   extract_overlap_pen(s1, s2)
-
+                   sentence_similarity_word_alignment(s1,s2),
+                   extract_overlap_pen(s1, s2),
+                    *extract_absolute_difference(s1, s2)
                    ]
         # cosine similarity
         feature_scores.append(scores)
