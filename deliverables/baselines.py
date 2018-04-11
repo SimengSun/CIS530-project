@@ -117,6 +117,7 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
             count += 1
     # Average the values
     if count >0: score /= count
+<<<<<<< HEAD
 
     # ppdb_wa_pen_ua features
     len_s1, len_s2 = len(sentence1), len(sentence2)
@@ -136,6 +137,10 @@ def extract_overlap_pen(s1, s2):
         ovlp_cnt += ss2.count(w1)
     score = 2 * ovlp_cnt / (len(ss1) + len(ss2) + .0)
     return score
+=======
+    ret = score *5
+    return ret
+>>>>>>> 9f89828da27c7060542f93e72c1ae47335d215b5
 
 #--------------------
 # from sklearn.svm import SVC, LinearSVC
