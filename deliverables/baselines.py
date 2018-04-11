@@ -86,7 +86,8 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
             count += 1
     # Average the values
     if count >0: score /= count
-    return score
+    ret = score *5
+    return ret
 
 #--------------------
 # from sklearn.svm import SVC, LinearSVC
