@@ -6,7 +6,7 @@ from googletrans import Translator
 import numpy as np
 translator = Translator()
 import time
-import pdb
+# import pdb
 
 from nltk.corpus import wordnet as wn
 
@@ -31,7 +31,7 @@ def get_ppdb(fname):
 
 ppdb = get_ppdb('../ppdb-2.0-l-lexical')
 print('end loading ppdb-2.0-l')
-pdb.set_trace()
+# pdb.set_trace()
 
 #--------------------
 def sentence_similarity_simple_baseline(s1, s2):
@@ -172,7 +172,7 @@ def main(args):
         feature_scores.append(scores)
         if i % 100 == 0:
             print('end ', i)
-    pdb.set_trace()
+    # pdb.set_trace()
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
     clf = LinearRegression(); clf.fit(X_features, true_score)
