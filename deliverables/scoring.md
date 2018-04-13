@@ -10,7 +10,6 @@ The official score is based on weighted Pearson correlation between predicted si
        
 For example:
 
-       $ python3 evaluate.py --goldfile STS.gs.track5.en-en.txt --predfile STS.pred.track5.en-en.txt
        $ python3 evaluate.py --goldfile ../data/en-val.txt --predfile ../data/pred-en.txt
 
 
