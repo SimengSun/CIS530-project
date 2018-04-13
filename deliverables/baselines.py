@@ -223,6 +223,23 @@ def extract_mmr_t(s1, s2):
 
     return [t1, t2, t3, t4, t5]
 
+
+# ==================     ======================
+# https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-lee.ipynb
+
+import gensim
+import os
+import collections
+import smart_open
+import random
+
+def extract_doc2vec_similarity(s1,s2, model):
+    s1 = [w.strip('?.,') for w in s1.split()]
+    s2 = [w.strip('?.,') for w in s2.split()]
+    embed1 = model.infer_vector(s1)
+    embed2 = model.infer_vector(s2)
+    ret = np.dot(embed1,embed2)
+    return ret
 #--------------------
 # from sklearn.svm import SVC, LinearSVC
 from sklearn.linear_model import LinearRegression
@@ -246,19 +263,40 @@ def main(args):
             second_sents.append(second_sentence)
             true_score.append(gs)
 
+
+    def read_corpus(fname, tokens_only=False):
+        with smart_open.smart_open(fname, encoding="iso-8859-1") as f:
+            for line in f:
+                line_split = line.split('\t')
+                for sent in line_split:
+                    if tokens_only:
+                        yield gensim.utils.simple_preprocess(sent)
+                    else:
+                        # For training data, add tags
+                        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(sent), [0])
+
+    train_corpus = list(read_corpus(args.pairfile))
+    model_doc2vec = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=55)
+    model_doc2vec.build_vocab(train_corpus)
+    print("========== doc2vec model training start ========")
+    T1 = time.time()
+    model_doc2vec.train(train_corpus, total_examples=model_doc2vec.corpus_count, epochs=model_doc2vec.epochs)
+    print("Elapsed time:", time.time() - T1)
+    print("========== doc2vec model training finished =====")
     feature_scores = []
-    for i in range(len(first_sents)):
+    N = len(first_sents)
+    for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
         scores = [ sentence_similarity_simple_baseline(s1,s2)
                    ,sentence_similarity_word_alignment(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2) ]
+                   ,*extract_mmr_t(s1, s2) 
+                   , extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
         feature_scores.append(scores)
-        if i % 100 == 0:
-            print('end ', i)
+        if 0 == (i+1) % int(N/10): print("%.2f" % (i *1.0/ N *100), "%"+"finished")
 
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
@@ -278,18 +316,20 @@ def main(args):
             second_sents.append(second_sentence)
 
     feature_scores = []
-    for i in range(len(first_sents)):
+    N = len(first_sents)
+    for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
         scores = [ sentence_similarity_simple_baseline(s1,s2)
                    ,sentence_similarity_word_alignment(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2)  ]
+                   ,*extract_mmr_t(s1, s2) 
+                   , extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
         # cosine similarity
         feature_scores.append(scores)
-        if i % 100 == 0:
-            print('end ', i)
+        if 0 == (i+1) % int(N/10):
+            print("%.2f" % (i *1.0 / N *100),"%"+"finished")
     X_features = scaler.transform(feature_scores)
     Y_pred_np = clf.predict(X_features)
     Y_pred_np = [min(5,max(0,p),p) for p in Y_pred_np]
