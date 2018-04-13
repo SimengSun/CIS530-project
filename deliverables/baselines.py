@@ -30,7 +30,7 @@ parser.add_argument('--v', type=int, required=True)
 # print('end loading ' + PPDB_file)
 
 #--------------------
-def sentence_similarity_simple_baseline(s1, s2):
+def sentence_similarity_simple_baseline(s1, s2,counts = None):
     def embedding_count(s):
         ret_embedding = defaultdict(int)
         for w in s.split():
@@ -41,9 +41,14 @@ def sentence_similarity_simple_baseline(s1, s2):
     second_sent_embedding = embedding_count(s2)
     Embedding1 = []
     Embedding2 = []
-    for w in first_sent_embedding:
-        Embedding1.append(first_sent_embedding[w])
-        Embedding2.append(second_sent_embedding[w])
+    if counts:
+        for w in first_sent_embedding:
+            Embedding1.append(first_sent_embedding[w] * 1.0/ (counts[w]+0.001))
+            Embedding2.append(second_sent_embedding[w] *1.0/ (counts[w]+0.001))
+    else:
+        for w in first_sent_embedding:
+            Embedding1.append(first_sent_embedding[w])
+            Embedding2.append(second_sent_embedding[w])
     ret_score = 0
     if not 0 == sum(Embedding2): 
         #https://stackoverflow.com/questions/6709693/calculating-the-similarity-of-two-lists
@@ -251,6 +256,7 @@ def main(args):
     first_sents = []
     second_sents = []
     true_score = []
+
     with open(args.pairfile,'r') as f:
         for line in f.readlines():
             line_split = line.split('\t')
@@ -263,6 +269,12 @@ def main(args):
             second_sents.append(second_sentence)
             true_score.append(gs)
 
+    Counts_for_tf = defaultdict(int)
+
+    for sent in first_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+    for sent in second_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
 
     def read_corpus(fname, tokens_only=False):
         with smart_open.smart_open(fname, encoding="iso-8859-1") as f:
@@ -288,7 +300,7 @@ def main(args):
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2)
+        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
@@ -315,12 +327,19 @@ def main(args):
             first_sents.append(first_sentence)
             second_sents.append(second_sentence)
 
+
+    for sent in first_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+    for sent in second_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+
+
     feature_scores = []
     N = len(first_sents)
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2)
+        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
