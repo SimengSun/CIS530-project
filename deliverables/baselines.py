@@ -23,9 +23,11 @@ parser.add_argument('--v', type=int, required=True)
 #     with open(fname, 'rb') as f:
 #         ppdb = pickle.load(f)
 #     return ppdb
-#
-# ppdb = get_ppdb('../ppdb-filter')
-# print('end loading ppdb-filter')
+
+# # PPDB_file = 'ppdb-filter'
+# PPDB_file = 'ppdb-2.0-l-lexical'
+# ppdb = get_ppdb('../' + PPDB_file)
+# print('end loading ' + PPDB_file)
 
 #--------------------
 def sentence_similarity_simple_baseline(s1, s2):
@@ -94,23 +96,25 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
         L_prime = L
         L = [l for l in L if l]
 
-        ## compute ppdb score
-        if len(L) > 0 and max(L) > 0.6:
-            align_cnt += 1
-            ss2 = synsets2[L_prime.index(max(L))]
-            w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
-            if (w1, w2) in ppdb:
-                ppdb_score += ppdb[(w1, w2)]
-            elif (w2, w1) in ppdb:
-                ppdb_score += ppdb[(w2, w1)]
-            else:
-                if w2 == w1:
-                    ppdb_score += 5
-                else:
-                    ppdb_score += 0
-                notin_cnt[0] += 1
+        # compute ppdb score
+        # if len(L) > 0 and max(L) > 0.6:
+        #     align_cnt += 1
+        #     ss2 = synsets2[L_prime.index(max(L))]
+        #     w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
+        #     if (w1, w2) in ppdb:
+        #         ppdb_score += ppdb[(w1, w2)]
+        #     elif (w2, w1) in ppdb:
+        #         ppdb_score += ppdb[(w2, w1)]
+        #     else:
+        #         if w2 == w1:
+        #             ppdb_score += 5
+        #         else:
+        #             ppdb_score += 0
+        #         notin_cnt[0] += 1
+
 
         # Check that the similarity could have been computed
+
         if L: 
             best_score = max(L)
             score += best_score
@@ -118,10 +122,10 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
     # Average the values
     if count >0: score /= count
 
-    ##ppdb_wa_pen_ua features
-    len_s1, len_s2 = len(sentence1), len(sentence2)
-    ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
-    return score, ppdb_score
+    # ppdb_wa_pen_ua features
+    # len_s1, len_s2 = len(sentence1), len(sentence2)
+    # ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
+    return score#, ppdb_score
 # =================================
 def extract_overlap_pen(s1, s2):
     """
