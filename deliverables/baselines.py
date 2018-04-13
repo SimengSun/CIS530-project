@@ -297,6 +297,7 @@ def main(args):
     print("========== doc2vec model training finished =====")
     feature_scores = []
     N = len(first_sents)
+    T1 = time.time()
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
@@ -308,7 +309,7 @@ def main(args):
                    , extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
         feature_scores.append(scores)
-        if 0 == (i+1) % int(N/10): print("%.2f" % (i *1.0/ N *100), "%"+"finished")
+        if 0 == (i+1) % int(N/10): print("%.2f" % ( (i +1)*1.0/ N *100), "%"+"finished (",time.time() - T1,")")
 
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
@@ -336,6 +337,7 @@ def main(args):
 
     feature_scores = []
     N = len(first_sents)
+    T1 = time.time()
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
@@ -347,8 +349,7 @@ def main(args):
                    , extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
         # cosine similarity
         feature_scores.append(scores)
-        if 0 == (i+1) % int(N/10):
-            print("%.2f" % (i *1.0 / N *100),"%"+"finished")
+        if 0 == (i+1) % int(N/10): print("%.2f" % ((i+1) *1.0 / N *100),"%"+"finished (",time.time() - T1,")")
     X_features = scaler.transform(feature_scores)
     Y_pred_np = clf.predict(X_features)
     Y_pred_np = [min(5,max(0,p),p) for p in Y_pred_np]
