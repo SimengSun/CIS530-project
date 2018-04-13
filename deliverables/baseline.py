@@ -23,12 +23,14 @@ parser.add_argument('--v', type=int, required=True)
 #     with open(fname, 'rb') as f:
 #         ppdb = pickle.load(f)
 #     return ppdb
-#
-# ppdb = get_ppdb('../ppdb-filter')
-# print('end loading ppdb-filter')
+
+# # PPDB_file = 'ppdb-filter'
+# PPDB_file = 'ppdb-2.0-l-lexical'
+# ppdb = get_ppdb('../' + PPDB_file)
+# print('end loading ' + PPDB_file)
 
 #--------------------
-def sentence_similarity_simple_baseline(s1, s2):
+def sentence_similarity_simple_baseline(s1, s2,counts = None):
     def embedding_count(s):
         ret_embedding = defaultdict(int)
         for w in s.split():
@@ -39,9 +41,14 @@ def sentence_similarity_simple_baseline(s1, s2):
     second_sent_embedding = embedding_count(s2)
     Embedding1 = []
     Embedding2 = []
-    for w in first_sent_embedding:
-        Embedding1.append(first_sent_embedding[w])
-        Embedding2.append(second_sent_embedding[w])
+    if counts:
+        for w in first_sent_embedding:
+            Embedding1.append(first_sent_embedding[w] * 1.0/ (counts[w]+0.001))
+            Embedding2.append(second_sent_embedding[w] *1.0/ (counts[w]+0.001))
+    else:
+        for w in first_sent_embedding:
+            Embedding1.append(first_sent_embedding[w])
+            Embedding2.append(second_sent_embedding[w])
     ret_score = 0
     if not 0 == sum(Embedding2): 
         #https://stackoverflow.com/questions/6709693/calculating-the-similarity-of-two-lists
@@ -94,23 +101,25 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
         L_prime = L
         L = [l for l in L if l]
 
-        ## compute ppdb score
-        if len(L) > 0 and max(L) > 0.6:
-            align_cnt += 1
-            ss2 = synsets2[L_prime.index(max(L))]
-            w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
-            if (w1, w2) in ppdb:
-                ppdb_score += ppdb[(w1, w2)]
-            elif (w2, w1) in ppdb:
-                ppdb_score += ppdb[(w2, w1)]
-            else:
-                if w2 == w1:
-                    ppdb_score += 5
-                else:
-                    ppdb_score += 0
-                notin_cnt[0] += 1
+        # compute ppdb score
+        # if len(L) > 0 and max(L) > 0.6:
+        #     align_cnt += 1
+        #     ss2 = synsets2[L_prime.index(max(L))]
+        #     w1, w2 = synset.lemma_names()[0], ss2.lemma_names()[0]
+        #     if (w1, w2) in ppdb:
+        #         ppdb_score += ppdb[(w1, w2)]
+        #     elif (w2, w1) in ppdb:
+        #         ppdb_score += ppdb[(w2, w1)]
+        #     else:
+        #         if w2 == w1:
+        #             ppdb_score += 5
+        #         else:
+        #             ppdb_score += 0
+        #         notin_cnt[0] += 1
+
 
         # Check that the similarity could have been computed
+
         if L: 
             best_score = max(L)
             score += best_score
@@ -118,10 +127,10 @@ def sentence_similarity_word_alignment(sentence1, sentence2):
     # Average the values
     if count >0: score /= count
 
-    ##ppdb_wa_pen_ua features
-    len_s1, len_s2 = len(sentence1), len(sentence2)
-    ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
-    return score, ppdb_score
+    # ppdb_wa_pen_ua features
+    # len_s1, len_s2 = len(sentence1), len(sentence2)
+    # ppdb_score = (1 - 0.4 * (len_s1 + len_s2 - 2*align_cnt) / float(len_s1 + len_s2)) * ppdb_score
+    return score#, ppdb_score
 # =================================
 def extract_overlap_pen(s1, s2):
     """
@@ -219,6 +228,23 @@ def extract_mmr_t(s1, s2):
 
     return [t1, t2, t3, t4, t5]
 
+
+# ==================     ======================
+# https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-lee.ipynb
+
+import gensim
+import os
+import collections
+import smart_open
+import random
+
+def extract_doc2vec_similarity(s1,s2, model):
+    s1 = [w.strip('?.,') for w in s1.split()]
+    s2 = [w.strip('?.,') for w in s2.split()]
+    embed1 = model.infer_vector(s1)
+    embed2 = model.infer_vector(s2)
+    ret = np.dot(embed1,embed2)
+    return ret
 #--------------------
 # from sklearn.svm import SVC, LinearSVC
 from sklearn.linear_model import LinearRegression
@@ -230,6 +256,7 @@ def main(args):
     first_sents = []
     second_sents = []
     true_score = []
+
     with open(args.pairfile,'r') as f:
         for line in f.readlines():
             line_split = line.split('\t')
@@ -242,19 +269,47 @@ def main(args):
             second_sents.append(second_sentence)
             true_score.append(gs)
 
+    Counts_for_tf = defaultdict(int)
+
+    for sent in first_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+    for sent in second_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+
+    def read_corpus(fname, tokens_only=False):
+        with smart_open.smart_open(fname, encoding="iso-8859-1") as f:
+            for line in f:
+                line_split = line.split('\t')
+                for sent in line_split:
+                    if tokens_only:
+                        yield gensim.utils.simple_preprocess(sent)
+                    else:
+                        # For training data, add tags
+                        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(sent), [0])
+
+    train_corpus = list(read_corpus(args.pairfile))
+    model_doc2vec = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=55)
+    model_doc2vec.build_vocab(train_corpus)
+    print("========== doc2vec model training start ========")
+    T1 = time.time()
+    model_doc2vec.train(train_corpus, total_examples=model_doc2vec.corpus_count, epochs=model_doc2vec.epochs)
+    print("Elapsed time:", time.time() - T1)
+    print("========== doc2vec model training finished =====")
     feature_scores = []
-    for i in range(len(first_sents)):
+    N = len(first_sents)
+    T1 = time.time()
+    for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2)
+        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2) ]
+                   ,*extract_mmr_t(s1, s2) 
+                   , extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
         feature_scores.append(scores)
-        if i % 100 == 0:
-            print('end ', i)
+        if 0 == (i+1) % int(N/10): print("%.2f" % ( (i +1)*1.0/ N *100), "%"+"finished (",time.time() - T1,")")
 
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
@@ -273,19 +328,28 @@ def main(args):
             first_sents.append(first_sentence)
             second_sents.append(second_sentence)
 
+
+    for sent in first_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+    for sent in second_sents:
+        for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
+
+
     feature_scores = []
-    for i in range(len(first_sents)):
+    N = len(first_sents)
+    T1 = time.time()
+    for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2)
+        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2)  ]
+                   ,*extract_mmr_t(s1, s2) 
+                   , extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
         # cosine similarity
         feature_scores.append(scores)
-        if i % 100 == 0:
-            print('end ', i)
+        if 0 == (i+1) % int(N/10): print("%.2f" % ((i+1) *1.0 / N *100),"%"+"finished (",time.time() - T1,")")
     X_features = scaler.transform(feature_scores)
     Y_pred_np = clf.predict(X_features)
     Y_pred_np = [min(5,max(0,p),p) for p in Y_pred_np]
