@@ -246,7 +246,8 @@ def extract_doc2vec_similarity(s1,s2, model):
     ret = np.dot(embed1,embed2)
     return ret
 #--------------------
-# from sklearn.svm import SVC, LinearSVC
+# from sklearn.svm import SVC, 
+from sklearn.svm import SVR
 from sklearn.linear_model import LinearRegression
 import sklearn
 def main(args):
@@ -276,25 +277,25 @@ def main(args):
     for sent in second_sents:
         for w in [w.strip("?.,") for w in sent.split()]: Counts_for_tf[w] += 1
 
-    def read_corpus(fname, tokens_only=False):
-        with smart_open.smart_open(fname, encoding="iso-8859-1") as f:
-            for line in f:
-                line_split = line.split('\t')
-                for sent in line_split:
-                    if tokens_only:
-                        yield gensim.utils.simple_preprocess(sent)
-                    else:
-                        # For training data, add tags
-                        yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(sent), [0])
+    # def read_corpus(fname, tokens_only=False):
+    #     with smart_open.smart_open(fname, encoding="iso-8859-1") as f:
+    #         for line in f:
+    #             line_split = line.split('\t')
+    #             for sent in line_split:
+    #                 if tokens_only:
+    #                     yield gensim.utils.simple_preprocess(sent)
+    #                 else:
+    #                     # For training data, add tags
+    #                     yield gensim.models.doc2vec.TaggedDocument(gensim.utils.simple_preprocess(sent), [0])
 
-    train_corpus = list(read_corpus(args.pairfile))
-    model_doc2vec = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=55)
-    model_doc2vec.build_vocab(train_corpus)
-    print("========== doc2vec model training start ========")
-    T1 = time.time()
-    model_doc2vec.train(train_corpus, total_examples=model_doc2vec.corpus_count, epochs=model_doc2vec.epochs)
-    print("Elapsed time:", time.time() - T1)
-    print("========== doc2vec model training finished =====")
+    # train_corpus = list(read_corpus(args.pairfile))
+    # model_doc2vec = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=55)
+    # model_doc2vec.build_vocab(train_corpus)
+    # print("========== doc2vec model training start ========")
+    # T1 = time.time()
+    # model_doc2vec.train(train_corpus, total_examples=model_doc2vec.corpus_count, epochs=model_doc2vec.epochs)
+    # print("Elapsed time:", time.time() - T1)
+    # print("========== doc2vec model training finished =====")
     feature_scores = []
     N = len(first_sents)
     T1 = time.time()
@@ -305,15 +306,18 @@ def main(args):
                    ,sentence_similarity_word_alignment(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2) 
-                   , extract_doc2vec_similarity(s1,s2, model_doc2vec)]
+                   ,*extract_mmr_t(s1, s2)]
+                   #, extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
         feature_scores.append(scores)
         if 0 == (i+1) % int(N/10): print("%.2f" % ( (i +1)*1.0/ N *100), "%"+"finished (",time.time() - T1,")")
 
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
-    clf = LinearRegression(); clf.fit(X_features, true_score)
+    #clf = LinearRegression(); clf.fit(X_features, true_score)
+    clf = SVR() # R1 uses default parameters as described in SVR documentation
+    clf.fit(X_features, true_score)
+
     #-----------
     # predicting
     first_sents = []
@@ -345,8 +349,8 @@ def main(args):
                    ,sentence_similarity_word_alignment(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2) 
-                   , extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
+                   ,*extract_mmr_t(s1, s2)]
+                   #, extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
         # cosine similarity
         feature_scores.append(scores)
         if 0 == (i+1) % int(N/10): print("%.2f" % ((i+1) *1.0 / N *100),"%"+"finished (",time.time() - T1,")")
