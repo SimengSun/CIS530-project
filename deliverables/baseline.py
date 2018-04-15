@@ -247,7 +247,7 @@ def extract_doc2vec_similarity(s1,s2, model):
     return ret
 #--------------------
 # from sklearn.svm import SVC, 
-from sklearn.svm import SVR
+from sklearn.svm import SVR, LinearSVR
 from sklearn.linear_model import LinearRegression
 import sklearn
 def main(args):
