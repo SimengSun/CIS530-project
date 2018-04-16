@@ -1,1 +1,8 @@
 ppdb-2.0-l-lexical
+en-all.txt
+all-data.txt
+all-gs.txt
+all-pairs.txt
+en-all.txt
+pkl2txt.py
+data_preproc.py

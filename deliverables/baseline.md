@@ -1,13 +1,8 @@
 Please download ppdb-2.0-l-lexical from paraphase.org or ppdb.org (choose `lexical` and `L size`) and put the 800MB file in the root folder.
 
-`python3 baseline.py --pairfile ../data/en-train.txt --valfile ../data/en-val.txt --predfile ../data/pred-en-val.txt --v 1`
-
-`python3 baseline.py --pairfile ../data/en-train.txt --valfile ../data/en-test.txt --predfile ../data/pred-en-test.txt --v 1`
-
 Train on train+val and test on test set:
 `python3 baseline.py --pairfile ../data/en-train-complete.txt --valfile ../data/en-test.txt --predfile ../data/pred-en-test.txt --v 1`
 
-`python3 baseline.py --pairfile ../data/new_data/en-train-val.txt --valfile ../data//new_data/en-test.txt --predfile ../data/new_data/pred-en-test.txt --v 1`
 
 Evaluate things the same way as simple baseline:
 `python3 evaluate.py --goldfile ../data/en-val.txt --predfile ../data/pred-en.txt`
