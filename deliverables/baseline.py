@@ -7,6 +7,7 @@ import numpy as np
 import pickle
 translator = Translator()
 import time
+from nltk.corpus import wordnet_ic
 # import pdb
 
 from nltk.corpus import wordnet as wn
@@ -226,8 +227,39 @@ def extract_mmr_t(s1, s2):
         t4 = 1 / (t4 + 0.001)
         t5 = 1 / (t5 + 0.001)
 
-    return [t1, t2, t3, t4, t5]
+    return [t1, t2, t3, t4, t5]    
 
+def sentence_similarity_information_content(sentence1, sentence2):
+
+    ''' compute the sentence similairty using information content from wordnet '''
+
+    brown_ic = wordnet_ic.ic('ic-brown.dat')
+    # Tokenize and tag
+    sentence1 = pos_tag(word_tokenize(sentence1))
+    sentence2 = pos_tag(word_tokenize(sentence2)) 
+    # Get the synsets for the tagged words
+    synsets1 = [tagged_to_synset(*tagged_word) for tagged_word in sentence1]
+    synsets2 = [tagged_to_synset(*tagged_word) for tagged_word in sentence2]
+    # Filter out the Nones
+    synsets1 = [ss for ss in synsets1 if ss]
+    synsets2 = [ss for ss in synsets2 if ss]
+    score, count = 0.0, 0
+    ppdb_score, align_cnt = 0, 0
+    # For each word in the first sentence
+    for synset in synsets1:
+        L = []
+        for ss in synsets2:
+            try:
+                L.append(synset.res_similarity(ss, brown_ic))
+            except:
+                continue
+        if L: 
+            best_score = max(L)
+            score += best_score
+            count += 1
+    # Average the values
+    if count >0: score /= count
+    return score
 
 # ==================     ======================
 # https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-lee.ipynb
@@ -304,6 +336,7 @@ def main(args):
         s2 = second_sents[i]
         scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
+                   ,sentence_similarity_information_content(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)]
@@ -347,6 +380,7 @@ def main(args):
         s2 = second_sents[i]
         scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
+                   ,sentence_similarity_information_content(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)]
