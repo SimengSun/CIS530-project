@@ -1,11 +1,13 @@
 Please download ppdb-2.0-l-lexical from paraphase.org or ppdb.org (choose `lexical` and `L size`) and put the 800MB file in the root folder.
 
 Train on train+val and test on test set:
+
+`python3 baseline.py --pairfile ../data/en-train-complete.txt --valfile ../data/en-val.txt --predfile ../data/pred-en-val.txt --v 1`
+
 `python3 baseline.py --pairfile ../data/en-train-complete.txt --valfile ../data/en-test.txt --predfile ../data/pred-en-test.txt --v 1`
 
 
-Evaluate things the same way as simple baseline:
-`python3 evaluate.py --goldfile ../data/en-val.txt --predfile ../data/pred-en.txt`
+Evaluate things the same way as simple baseline.
 
 Important Note: 
 
@@ -16,4 +18,4 @@ We ran our code for simple baseline (Milestone 2) using a very small test set fr
 `python3 evaluate.py --goldfile ../data/en-test.txt --predfile ../data/pred-en-test.txt`
 
 Milestone 3 Performance:
-Our performance on validation set is 0.451509322045294, while on test set is 0.6579226143671086.
+Our performance on validation set is 0.5592743197713382, while on test set is 0.6740625548804725.
