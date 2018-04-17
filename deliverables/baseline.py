@@ -333,12 +333,14 @@ def main(args):
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
+
+        scores = [ #sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
                    ,sentence_similarity_word_alignment(s1,s2)
                    # ,sentence_similarity_information_content(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2)]
+                   ,*extract_mmr_t(s1, s2)
+                 ]
                    #, extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
         feature_scores.append(scores)
@@ -377,9 +379,10 @@ def main(args):
     for i in range(N):
         s1 = first_sents[i]
         s2 = second_sents[i]
-        scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
-                   ,sentence_similarity_word_alignment(s1,s2)
-                   # ,sentence_similarity_information_content(s1,s2)
+
+        scores = [ #sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
+                   sentence_similarity_word_alignment(s1,s2)
+                   #,sentence_similarity_information_content(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)]
