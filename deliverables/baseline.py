@@ -11,6 +11,7 @@ from nltk.corpus import wordnet_ic
 # import pdb
 
 from nltk.corpus import wordnet as wn
+brown_ic = wordnet_ic.ic('ic-brown.dat')
 
 pp = pprint.PrettyPrinter()
 parser = argparse.ArgumentParser()
@@ -232,8 +233,6 @@ def extract_mmr_t(s1, s2):
 def sentence_similarity_information_content(sentence1, sentence2):
 
     ''' compute the sentence similairty using information content from wordnet '''
-
-    brown_ic = wordnet_ic.ic('ic-brown.dat')
     # Tokenize and tag
     sentence1 = pos_tag(word_tokenize(sentence1))
     sentence2 = pos_tag(word_tokenize(sentence2)) 
