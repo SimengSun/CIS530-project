@@ -6,3 +6,4 @@ all-pairs.txt
 en-all.txt
 pkl2txt.py
 data_preproc.py
+*.bin
