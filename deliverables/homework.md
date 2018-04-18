@@ -7,24 +7,21 @@ snippets of text. While making such an assessment is trivial for humans, constru
 computational models that mimic human level performance represents a difficult and deep natural language
 understanding (NLU) problem.
 
-Given two sentences, participating systems are asked to return a continuous valued similarity score on a scale from
-0 to 5, with 0 indicating that the semantics of the sentences are completely independent and 5 signifying semantic
-equivalence. Performance is assessed by computing the Pearson correlation between machine assigned semantic
-similarity scores and human judgements.
-
-This problem focuses on determining semantic similarity between monolingual and cross-lingual sentence pairs in
-the languages Arabic, English and Spanish. 
 
 #### Example 1:
+
 English: Birdie is washing itself in the water basin.
+
 English Paraphrase: The bird is bathing in the sink.
-Spanish: El pa ́jaro se esta ban ̃ando en el lavabo.
+
 Similarity Score: 5 ( The two sentences are completely equivalent, as they mean the same thing.)
 
 #### Example 2:
+
 English: The young lady enjoys listening to the guitar.
+
 English Paraphrase: The woman is playing the violin.
-Spanish: La mujer esta ́ tocando el viol ́ın.
+
 Similarity Score: 1 ( The two sentences are not equivalent, but are on the same topic. )
 
 You are free to use any unsupervised or supervised approach for the above mentioned problem. A very simple baseline to start with would be using binary bag-of-words model with the entire vocabulary as features to create embeddings and measuring the cosine similarity between the produced embeddings to generate a final prediction score. You should be able to achieve a Pearson Correlation Coefficient of 0.62 with this very simple approach. 
@@ -58,7 +55,7 @@ Suggested by [Models submitted to shared task - STS 2017](http://www.aclweb.org/
 
 Broadly speaking, there are following three aspects towards improvements:
 
-1. whether or not the method utilizes gold-standard similarities;
+1. whether or not the method utilizes gold-standard similarities (supervised or unsupervised; simple baseline is obviously unsupervised);
 2. choice of sentence embeddings;
 3. the way of utilizing sentence embeddings.
 
@@ -105,3 +102,5 @@ similarity approach. In Proceedings of SemEval-2017.](http://www.aclweb.org/anth
 8. sent2vec
 
  **[Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).](https://arxiv.org/abs/1703.02507)**
+ 
+ DT_Team might be a good start since it turns the problem into feature engineering and selection of classifiers.
