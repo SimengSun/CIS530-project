@@ -26,11 +26,11 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         V = 10002 # 10000 + unk + pad
-        D = 256 # word embedding size
+        D = 128 # word embedding size
         Cin = 1 # input channel
         ks = [1,2,3,4,5,6] # kernel size
-        Cout = 32
-        dropout = 0.5
+        Cout = 20
+        dropout = 0.2
 
         self.embed = nn.Embedding(V, D)
         self.conv = nn.ModuleList([nn.Conv2d(Cin, Cout, (k, 2*D)).double() for k in ks])
@@ -70,7 +70,7 @@ def load_data(fname, w2id):
             where s1 and s2 are list of index of words in vocab
     """
     def get_indxs(sentence, w2id):
-        MAX_LEN = 40
+        MAX_LEN = 30
         res = []
         sp = sentence.split()
         for word in sp:
@@ -118,7 +118,7 @@ def main(args):
 
     # hyper param
     batch_size = 128
-    lr = 0.01
+    lr = 0.03
 
     # load data
     data_train = load_data(args.trainfile, w2id)
@@ -127,10 +127,10 @@ def main(args):
 
     # loss
     criterion = nn.MSELoss()
-    optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr, weight_decay=0.00005)
+    optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr)
 
     # train
-    for epoch in range(10):
+    for epoch in range(20):
         for i, (s1, s2, score) in enumerate(mini_batch(data_train, batch_size)):
             s1 = Variable(torch.from_numpy(s1))
             s2 = Variable(torch.from_numpy(s2))
@@ -142,7 +142,7 @@ def main(args):
             optimizer.step()
             if (i) % 5 == 0:
                 print(datetime.datetime.now(), 'Epoch {} batch {} loss: {}' .format(epoch, i, loss.data[0]))
-
+    torch.save(cnn.state_dict(), "./data/cnn.mdl")
     # evaluate
     cnn.eval()
     res = []
