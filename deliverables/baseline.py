@@ -7,7 +7,7 @@ import numpy as np
 import pickle
 translator = Translator()
 import time
-# from nltk.corpus import wordnet_ic
+from nltk.corpus import wordnet_ic
 # import pdb
 
 from nltk.corpus import wordnet as wn
@@ -335,7 +335,7 @@ def main(args):
         s2 = second_sents[i]
 
         scores = [ #sentence_similarity_simple_baseline(s1,s2, Counts_for_tf)
-                   ,sentence_similarity_word_alignment(s1,s2)
+                   sentence_similarity_word_alignment(s1,s2)
                    # ,sentence_similarity_information_content(s1,s2)
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
