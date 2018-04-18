@@ -1,7 +1,7 @@
 
 # Extension-1 
 
-## Adding Dense sentence representation using Convolutional Neural Network
+## Adding dense sentence representation using Convolutional Neural Network
 
 ![alt text](https://raw.githubusercontent.com/SimengSun/CIS530-project/master/deliverables/pics/cnn-model.png "cnn-model")
 
