@@ -26,10 +26,10 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         V = 10002 # 10000 + unk + pad
-        D = 128 # word embedding size
+        D = 256 # word embedding size
         Cin = 1 # input channel
         ks = [1,2,3,4,5,6] # kernel size
-        Cout = 16
+        Cout = 32
         dropout = 0.5
 
         self.embed = nn.Embedding(V, D)
@@ -70,7 +70,7 @@ def load_data(fname, w2id):
             where s1 and s2 are list of index of words in vocab
     """
     def get_indxs(sentence, w2id):
-        MAX_LEN = 30
+        MAX_LEN = 40
         res = []
         sp = sentence.split()
         for word in sp:
@@ -118,7 +118,7 @@ def main(args):
 
     # hyper param
     batch_size = 128
-    lr = 0.05
+    lr = 0.01
 
     # load data
     data_train = load_data(args.trainfile, w2id)
@@ -130,7 +130,7 @@ def main(args):
     optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr, weight_decay=0.00005)
 
     # train
-    for epoch in range(5):
+    for epoch in range(10):
         for i, (s1, s2, score) in enumerate(mini_batch(data_train, batch_size)):
             s1 = Variable(torch.from_numpy(s1))
             s2 = Variable(torch.from_numpy(s2))
@@ -144,19 +144,19 @@ def main(args):
                 print(datetime.datetime.now(), 'Epoch {} batch {} loss: {}' .format(epoch, i, loss.data[0]))
 
     # evaluate
-    cnn.val()
+    cnn.eval()
     res = []
     for item in data_test:
         s1, s2 = np.array([item[0]]), np.array([item[1]])
         s1 = Variable(torch.from_numpy(s1))
         s2 = Variable(torch.from_numpy(s2))
         output = cnn(s1, s2)
-        res.append(output)
+        res.append(output.data.cpu().numpy()[0][0])
 
     # write prediction to file
     with open(args.predfile, 'w') as f:
         for i in res:
-            f.write(i + '\n')
+            f.write(str(i) + '\n')
 
 if __name__ == '__main__':
     args = parser.parse_args()
