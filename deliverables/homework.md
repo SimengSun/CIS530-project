@@ -35,7 +35,7 @@ similarity scores and human judgements.
 For more details of different levels of similarity, see table in [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001).
 
 ### Dataset
-Training data [`en-train.txt`](../data/en-train-complete.txt) contains 9472 pairs while [`en-val.txt`](../data/en-val.txt) contains 1500 pairs and [`en-test.txt`](../data/en-test.txt) contains 2376 pairs. 
+Training data [`en-train.txt`](../data/en-train-complete.txt) contains 9472 pairs while each of [`en-val.txt`](../data/en-val.txt) and [`en-test.txt`](../data/en-test.txt) contains 1500 pairs. 
 
 Speaking of sources of data, there are a lot of available data from shared tasks in STS from at least the last 5 years. We just use the evaluation data from [2017 shared task](http://alt.qcri.org/semeval2017/task1/) as the test set.
 
@@ -103,4 +103,4 @@ similarity approach. In Proceedings of SemEval-2017.](http://www.aclweb.org/anth
 
  **[Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).](https://arxiv.org/abs/1703.02507)**
  
- DT_Team might be a good start since it turns the problem into feature engineering and selection of classifiers.
+ DT_Team might be a good start since it turns the problem into feature engineering and selection of classifiers. You will receive full credits by having over 0.60 Pearson correlation.
