@@ -1,6 +1,6 @@
 ### Problem Definition
 
-Your goal in this project is to measure the semantic similarity between a given pair of sentences (what they mean rather than whether they look similar syntactically). 
+Your goal in this project is to measure semantic textual similarity between a given pair of sentences (what they mean rather than whether they look similar syntactically). 
 
 Semantic Textual Similarity (STS) measures the degree of equivalence in the underlying semantics of paired
 snippets of text. While making such an assessment is trivial for humans, constructing algorithms and
@@ -35,12 +35,73 @@ Given two sentences, participating systems are asked to return a continuous valu
 equivalence. Performance is assessed by computing the Pearson correlation between machine assigned semantic
 similarity scores and human judgements.
 
+For more details of different levels of similarity, see table in [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001).
+
 ### Dataset
-We will use monolingual \ sentence pairs in English, Spanish and Arabic as training data. There is a
-lot of available data from shared tasks in STS from at least the last 5 years. We will use the evaluation data for 2017 shared task as the test set.
+Training data [`en-train.txt`](../data/en-train-complete.txt) contains 9472 pairs while [`en-val.txt`](../data/en-val.txt) contains 1500 pairs and [`en-test.txt`](../data/en-test.txt) contains 2376 pairs. 
+
+Speaking of sources of data, there are a lot of available data from shared tasks in STS from at least the last 5 years. We just use the evaluation data from [2017 shared task](http://alt.qcri.org/semeval2017/task1/) as the test set.
+
 
 ### Resources
 
 [STS Shared Task 2017](http://alt.qcri.org/semeval2017/task1/)
 
 [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001)
+
+
+### A simple baseline
+
+Suggested by [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001), a simple baseline can be the cosine of binary sentence vectors with each dimension representing whether an individual word appears in a sentence. You should reach a Pearson correlation about 0.35.
+
+### Improving performance
+
+Broadly speaking, there are following three aspects towards improvements:
+
+1. whether or not the method utilizes gold-standard similarities;
+2. choice of sentence embeddings;
+3. the way of utilizing sentence embeddings.
+
+Enumerous attempts has been made and following is just a selected list:
+
+
+1. ECNU
+
+**[Junfeng Tian, Zhiheng Zhou, Man Lan, and Yuanbin Wu. 2017. ECNU at SemEval-2017 Task 1: Leverage kernel- based traditional nlp features and neural networks to build a universal model for multilingual and cross-lingual seman- tic textual similarity. In Proceedings of SemEval-2017.](http://www.aclweb.org/anthology/S17-2028)**
+
+
+2. BIT
+
+ **[Wu, Hao, et al. "BIT at SemEval-2017 Task 1: Using semantic information space to evaluate semantic textual similarity." Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017). 2017.](http://www.aclweb.org/anthology/S17-2007)**
+
+
+3. MITRE
+
+ **[John Henderson, Elizabeth Merkhofer, Laura Strickhart, and
+Guido Zarrella. 2017. MITRE at SemEval-2017 Task 1:
+Simple semantic similarity. In Proceedings of SemEval2017.](http://www.aclweb.org/anthology/S17-2027)**
+
+
+
+4. FCICU
+
+ **[Basma Hassan, Samir AbdelRahman, Reem Bahgat, and Ibrahim Farag. 2017. FCICU at SemEval-2017 Task 1: Sense-based language independent semantic textual
+similarity approach. In Proceedings of SemEval-2017.](http://www.aclweb.org/anthology/S17-2015)**
+
+5. Compi_LIG
+
+**[Ferrero, Jérémy, et al. "CompiLIG at SemEval-2017 Task 1: Cross-language plagiarism detection methods for semantic textual similarity." arXiv preprint arXiv:1704.01346 (2017).](https://arxiv.org/pdf/1704.01346.pdf)**
+
+
+6. LIM_LIG
+ 
+ **[Ferrero, Jérémy, and Didier Schwab. "LIM-LIG at SemEval-2017 Task1: Enhancing the Semantic Similarity for Arabic Sentences with Vectors Weighting." International Workshop on Semantic Evaluations (SemEval-2017). 2017.](https://hal.archives-ouvertes.fr/hal-01531255/)**
+
+7. DT_Team
+
+ **[Maharjan, Nabin, et al. "DT_Team at SemEval-2017 Task 1: Semantic Similarity Using Alignments, Sentence-Level Embeddings and Gaussian Mixture Model Output." Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017). 2017.](http://www.aclweb.org/anthology/S17-2014)**
+
+
+8. sent2vec
+
+ **[Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).](https://arxiv.org/abs/1703.02507)**
