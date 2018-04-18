@@ -334,6 +334,7 @@ def main(args):
         s1 = first_sents[i]
         s2 = second_sents[i]
 
+
         scores = [ sentence_similarity_simple_baseline(s1,s2, Counts_for_tf),
                    sentence_similarity_word_alignment(s1,s2)
                    ,sentence_similarity_information_content(s1,s2)
