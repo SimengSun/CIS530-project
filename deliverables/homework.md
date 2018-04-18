@@ -59,7 +59,7 @@ Broadly speaking, there are following three aspects towards improvements:
 2. choice of sentence embeddings;
 3. the way of utilizing sentence embeddings.
 
-Enumerous attempts has been made and following is just a selected list:
+Enumerous attempts have been made and following is just a selected list:
 
 
 1. ECNU
