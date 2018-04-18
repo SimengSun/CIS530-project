@@ -49,7 +49,7 @@ Speaking of sources of data, there are a lot of available data from shared tasks
 
 ### A simple baseline
 
-Suggested by [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001), a simple baseline can be the cosine of binary sentence vectors with each dimension representing whether an individual word appears in a sentence. You should reach a Pearson correlation about 0.35.
+Suggested by [Models submitted to shared task - STS 2017](http://www.aclweb.org/anthology/S17-2001), a simple baseline can be the cosine of binary sentence vectors with each dimension representing whether an individual word appears in a sentence. You should reach a Pearson correlation about 0.45.
 
 ### Improving performance
 
