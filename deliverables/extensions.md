@@ -26,6 +26,10 @@ result on newly organized data:
 
 # Extension-2
 
+## Adding information content using wordnet trees
+
+For this extension, we use wordnet tree representation of two sentences and compute resnik similarity based on 
+
 # Extension-3
 
 # Extension-4

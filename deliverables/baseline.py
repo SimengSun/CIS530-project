@@ -8,10 +8,13 @@ import pickle
 translator = Translator()
 import time
 from nltk.corpus import wordnet_ic
+from gensim.models import KeyedVectors
 # import pdb
 
 from nltk.corpus import wordnet as wn
 brown_ic = wordnet_ic.ic('ic-brown.dat')
+vec1 = KeyedVectors.load_word2vec_format("../data/word2vec/GoogleNews-vectors-negative300.bin", binary=True)
+vec2 = KeyedVectors.load_word2vec_format("../data/word2vec/GoogleNews-vectors-negative300.bin", binary=True)
 
 pp = pprint.PrettyPrinter()
 parser = argparse.ArgumentParser()
@@ -260,6 +263,65 @@ def sentence_similarity_information_content(sentence1, sentence2):
     if count >0: score /= count
     return score
 
+def extract_res_vec_similarity(s1, s2):
+    first_sents_embeddings = np.empty([0,300])
+    second_sents_embeddings = np.empty([0,300])
+
+    first_vecs = np.array([])
+    for w in s1.split():
+        w = w.strip('?.,')
+        if w in vec1:
+            first_vec = np.array([vec1[w]])
+            if first_vecs.shape[0] == 0:
+                first_vecs = first_vec
+            else:
+                first_vecs = np.vstack((first_vecs, first_vec))
+        else:
+            if first_vecs.shape[0] == 0:
+                first_vecs = np.random.normal(0, 5, 300)
+            else:
+                first_vecs = np.vstack((first_vecs, np.random.normal(0, 5, 300)))
+        # print("first ")
+        # print(first_vecs.shape)
+    if(first_vecs.shape == (300, )):
+        temp = first_vecs
+    else:
+        temp = np.mean(first_vecs, axis=0)
+    # print(temp.shape)
+    first_sents_embeddings = np.append(first_sents_embeddings, [temp], axis=0)
+
+    second_vecs = np.array([])  
+    for w in s2.split():
+        w = w.strip('?.,')
+        if w in vec2:
+            second_vec = np.array([vec2[w]])
+            if second_vecs.shape[0] == 0:
+                second_vecs = second_vec
+            else:
+                second_vecs = np.vstack((second_vecs, second_vec))
+        else:
+            if second_vecs.shape[0] == 0:
+                second_vecs = np.random.normal(0, 5, 300)
+            else:
+                second_vecs = np.vstack((second_vecs, np.random.normal(0, 5, 300)))
+        # print("second ")
+        # print(second_vecs.shape)
+    if(second_vecs.shape == (300,)):
+        temp = second_vecs
+    else:
+        temp = np.mean(second_vecs, axis=0)
+    # print(temp.shape)
+    second_sents_embeddings = np.append(second_sents_embeddings, [temp], axis=0)
+
+    for i in range(len(first_sents_embeddings)):
+        # cosine similarity
+
+        ret = np.dot(first_sents_embeddings[i], second_sents_embeddings[i]) / (np.linalg.norm(first_sents_embeddings[i]) * np.linalg.norm(second_sents_embeddings[i]))
+        ret = 5*(ret + 1) / 2
+
+    return ret
+
+
 # ==================     ======================
 # https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-lee.ipynb
 
@@ -341,6 +403,7 @@ def main(args):
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)
+                   #,extract_res_vec_similarity(s1, s2)
                  ]
                    #, extract_doc2vec_similarity(s1,s2, model_doc2vec)]
         # cosine similarity
@@ -350,7 +413,7 @@ def main(args):
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
     #clf = LinearRegression(); clf.fit(X_features, true_score)
-    clf = SVR() # R1 uses default parameters as described in SVR documentation
+    clf = SVR(kernel='linear') # R1 uses default parameters as described in SVR documentation
     clf.fit(X_features, true_score)
 
     #-----------
@@ -386,7 +449,9 @@ def main(args):
                    ,sentence_similarity_information_content(s1,s2)
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
-                   ,*extract_mmr_t(s1, s2)]
+                   ,*extract_mmr_t(s1, s2)
+                   #,extract_res_vec_similarity(s1, s2)
+                   ]
                    #, extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
         # cosine similarity
         feature_scores.append(scores)
