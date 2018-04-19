@@ -17,10 +17,11 @@ This model outperforms our baseline model
 | extension-CNN |  0.7381    |
 
 result on newly organized data:
+
 | model        | Correlation           |
 | ------------- |:-------------:|
-| baseline      |  |
-| extension-CNN |      |
+| baseline      |  - |
+| extension-CNN |   -   |
 
 
 # Extension-2
