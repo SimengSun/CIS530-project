@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Apr 21 16:07:01 2018
+
+@author: Danni
+"""
+
 from collections import defaultdict
 import pprint
 import argparse
@@ -11,12 +18,22 @@ from nltk.corpus import wordnet_ic
 from gensim.models import KeyedVectors
 from sklearn.ensemble import BaggingRegressor
 from sklearn.model_selection import cross_val_score
+import nltk
+import torch
+from scipy import spatial
 # import pdb
 
 from nltk.corpus import wordnet as wn
 brown_ic = wordnet_ic.ic('ic-brown.dat')
 vec1 = KeyedVectors.load_word2vec_format("../data/word2vec/GoogleNews-vectors-negative300.bin", binary=True)
 vec2 = KeyedVectors.load_word2vec_format("../data/word2vec/GoogleNews-vectors-negative300.bin", binary=True)
+# LSTM trained sent2vec
+nltk.download('punkt')
+infersent = torch.load('../data/InferSent-master/encoder/infersent.allnli.pickle', 
+                       map_location=lambda storage, loc: storage)
+infersent.set_glove_path('../data/InferSent-master/dataset/GloVe/glove.840B.300d.txt')
+infersent.build_vocab_k_words(K=100000)
+#print ('finish loading sentence vectors!')
 
 pp = pprint.PrettyPrinter()
 parser = argparse.ArgumentParser()
@@ -323,6 +340,13 @@ def extract_res_vec_similarity(s1, s2):
 
     return ret
 
+def extract_sent2vec_similarity(s1, s2):
+    eb1 = infersent.encode([s1], tokenize=True)
+    eb2 = infersent.encode([s2], tokenize=True)
+    a = np.squeeze(eb1).tolist()
+    b = np.squeeze(eb2).tolist()
+    ret = 1 - spatial.distance.cosine(a,b)
+    return ret
 
 # ==================     ======================
 # https://github.com/RaRe-Technologies/gensim/blob/develop/docs/notebooks/doc2vec-lee.ipynb
@@ -405,6 +429,7 @@ def main(args):
                    , extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)
+                   ,extract_sent2vec_similarity(s1, s2)
                    #,extract_res_vec_similarity(s1, s2)
                  ]
                    #, extract_doc2vec_similarity(s1,s2, model_doc2vec)]
@@ -460,6 +485,7 @@ def main(args):
                    ,extract_overlap_pen(s1, s2)
                    ,*extract_absolute_difference(s1, s2)
                    ,*extract_mmr_t(s1, s2)
+                   ,extract_sent2vec_similarity(s1, s2)
                    #,extract_res_vec_similarity(s1, s2)
                    ]
                    #, extract_doc2vec_similarity(s1,s2, model_doc2vec) ]
