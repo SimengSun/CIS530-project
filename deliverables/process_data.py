@@ -36,15 +36,11 @@ for line in lines:
 infile = codecs.open("../data/new_data/all-data-shuffled.txt", "r")
 trainfile = codecs.open("../data/new_data/en-train.txt", "w")
 valfile = codecs.open("../data/new_data/en-val.txt", "w")
-testfile = codecs.open("../data/new_data/en-test.txt", "w")
 
 lines = infile.readlines()
 
-for i in range(12115):
+for i in range(13365):
 	trainfile.write(lines[i])
 
-for i in range(12115, 13615):
+for i in range(13365, 14865):
 	valfile.write(lines[i])
-
-for i in range(13615, 15115):
-	testfile.write(lines[i])

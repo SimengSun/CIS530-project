@@ -24,7 +24,7 @@ English Paraphrase: The woman is playing the violin.
 
 Similarity Score: 1 ( The two sentences are not equivalent, but are on the same topic. )
 
-You are free to use any unsupervised or supervised approach for the above mentioned problem. A very simple baseline to start with would be using binary bag-of-words model with the entire vocabulary as features to create embeddings and measuring the cosine similarity between the produced embeddings to generate a final prediction score. You should be able to achieve a Pearson Correlation Coefficient of 0.62 with this very simple approach. 
+You are free to use any unsupervised or supervised approach for the above mentioned problem. A very simple baseline to start with would be using binary bag-of-words model with the entire vocabulary as features to create embeddings and measuring the cosine similarity between the produced embeddings to generate a final prediction score.
 
 ### Evaluation Metric
 Given two sentences, participating systems are asked to return a continuous valued similarity score on a scale from
