@@ -25,6 +25,7 @@ from nltk.corpus import wordnet as wn
 
 pp = pprint.PrettyPrinter()
 parser = argparse.ArgumentParser()
+brown_ic = wordnet_ic.ic('ic-brown.dat')
 
 parser.add_argument('--trainfile', type=str, required=True)
 parser.add_argument('--testfile', type=str, required=True)
@@ -41,27 +42,34 @@ class CNN(nn.Module):
         D = 300 # GoogleNews word2vec
         Cin = 1 # input channel
         ks = [2,3,4,5] # kernel size
-        Cout = 5
-        dropout = 0.2
-
-        self.conv = nn.ModuleList([nn.Conv2d(Cin, Cout, (k, 2*D)).float() for k in ks])
+        Cout = 16
+        dropout = 0.4
+        hn = 12
+        self.conv = nn.ModuleList([nn.Conv2d(Cin, Cout, (k, D)).float() for k in ks])
         self.dropout = nn.Dropout(dropout)
-        self.fc = nn.Linear(len(ks)*Cout, 1).float()
-        # self.nn_l1 = nn.Linear(len(ks)*Cout, hn)
-        # self.nn_reg = nn.Linear(hn, 1)
+        self.fc = nn.Linear(2*len(ks)*Cout + 11, 1).float()
+        self.nn_l1 = nn.Linear(2*len(ks)*Cout + 11, hn)
+        self.nn_reg = nn.Linear(hn, 1)
 
-    def forward(self, input):
+    def forward(self, input1, input2, baseline_features):
         # s1: batch_size x maxlen
-        # x1 = self.embed(s1).double()
-        # x2 = self.embed(s2).double()
         # input = torch.cat([x1, x2], 2) # batch_size x maxlen x 2D
-        # input: N x maxlen x 2D
-        input_unsq = input.unsqueeze(1)  # N x 1 x maxlen x 2D
-        out = [F.relu(conv(input_unsq).squeeze(3)) for conv in self.conv]  # [(N x Cout x maxlen)] * len(ks)
-        out = [F.max_pool1d(z, z.size(2)).squeeze(2) for z in out]  # [(N x Cout)] * len(ks)
-        out = torch.cat(out, 1)  # N x len(ks)*Cout
-        out = self.dropout(out).float()
-        out = F.relu(out)
+        # input: N x maxlen x D
+        input_unsq1 = input1.unsqueeze(1)  # N x 1 x maxlen x 2D
+        out1 = [F.relu(conv(input_unsq1).squeeze(3)) for conv in self.conv]  # [(N x Cout x maxlen)] * len(ks)
+        out1 = [F.max_pool1d(z, z.size(2)).squeeze(2) for z in out1]  # [(N x Cout)] * len(ks)
+        out1 = torch.cat(out1, 1)  # N x len(ks)*Cout
+        out1 = self.dropout(out1).float()
+
+        input_unsq2 = input2.unsqueeze(1)  # N x 1 x maxlen x 2D
+        out2 = [F.relu(conv(input_unsq2).squeeze(3)) for conv in self.conv]  # [(N x Cout x maxlen)] * len(ks)
+        out2 = [F.max_pool1d(z, z.size(2)).squeeze(2) for z in out2]  # [(N x Cout)] * len(ks)
+        out2 = torch.cat(out2, 1)  # N x len(ks)*Cout
+        out2 = self.dropout(out2).float()
+        # pdb.set_trace()
+        out = torch.cat((out1, out2), 1)
+        out = torch.cat([out, baseline_features], 1)
+
         out = self.fc(out).float()
         # out = self.nn_l1(out).float()
         # out = F.relu(out)
@@ -119,12 +127,18 @@ def load_data(fname, w2id):
             data.append((s1, s2, y, sp[0], sp[1]))
     return data
 
-def load_data_pretrain_emb(fname):
+def load_data_pretrain_emb(fname, wrd2id):
     """return dict"""
     with open(fname, 'rb') as f:
         res = pickle.load(f)
-    res['<UNK>'] = np.random.random((300))
-    res['<PAD>'] = np.random.random((300))
+    res['<UNK>'] = np.ones((300))
+    res['<PAD>'] = np.zeros((300))
+
+    w2id = sorted(list(wrd2id.items()), key=lambda a: a[1], reverse=True)
+    for word in w2id[:5000]:
+        if word[0] not in res:
+            res[word] = np.random.random((300))
+
     return res
 
 def load_example(data):
@@ -160,26 +174,7 @@ def extract_emb(s1, s2, wrdvec, id2w):
         return np.array(res)
     s1vec = get_emb(s1)
     s2vec = get_emb(s2)
-    res = np.concatenate((s1vec, s2vec), axis=2)
-    #res = s1vec + s2vec
-    # pdb.set_trace()
-    return res
-
-def extract_overlap_pen(s1, s2):
-    """
-    :param s1:
-    :param s2:
-    :return: overlap_pen score
-    """
-    ss1 = s1.strip().split()
-    ss2 = s2.strip().split()
-    ovlp_cnt = 0
-    for w1 in ss1:
-        ovlp_cnt += ss2.count(w1)
-    if len(ss1) + len(ss2) == 0:
-        pdb.set_trace()
-    score = 2 * ovlp_cnt / (len(ss1) + len(ss2) + .0)
-    return score
+    return s1vec, s2vec
 
 def main(args):
 
@@ -188,26 +183,31 @@ def main(args):
 
     # hyper param
     batch_size = 256
-    lr = 0.005
+    lr = 0.03
 
     # load data
     data_train = load_data(args.trainfile, w2id)
     data_test = load_data(args.testfile, w2id)
-    wrdvec = load_data_pretrain_emb('./data/pretrain-emb.pkl')
+    wrdvec = load_data_pretrain_emb('./data/pretrain-emb.pkl', w2id)
     cnn = CNN()
 
     # loss
-    criterion = nn.MSELoss()
-    optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr, weight_decay=0.001)
+    criterion = nn.L1Loss()
+    optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr)
 
     # train
-    for epoch in range(30):
+    for epoch in range(8):
         cnn.train()
         for i, (s1, s2, score, s1s, s2s) in enumerate(mini_batch(data_train, batch_size)):
-            input = Variable(torch.from_numpy(extract_emb(s1, s2, wrdvec, id2w))).float()
+            s1v, s2v = extract_emb(s1, s2, wrdvec, id2w)
+            baseline_features = extract_baseline_features(s1s, s2s)
+            baseline_features = Variable(torch.from_numpy(baseline_features)).float()
+            input1 = Variable(torch.from_numpy(s1v)).float()
+            input2 = Variable(torch.from_numpy(s2v)).float()
             score = Variable(torch.from_numpy(score)).float()
+            # pdb.set_trace()
             optimizer.zero_grad()
-            output = cnn(input)
+            output = cnn(input1, input2, baseline_features)
             loss = criterion(output, score)
             loss.backward()
             optimizer.step()
@@ -219,9 +219,14 @@ def main(args):
         loss_val = 0
         for item in data_test:
             s1, s2, score, s1s, s2s = np.array([item[0]]), np.array([item[1]]), np.array([item[2]]), item[3], item[4]
-            input = Variable(torch.from_numpy(extract_emb(s1, s2, wrdvec, id2w))).float()
+            s1v, s2v = extract_emb(s1, s2, wrdvec, id2w)
+            baseline_features = extract_baseline_features([s1s], [s2s])
+            baseline_features = Variable(torch.from_numpy(baseline_features)).float()
+            input1 = Variable(torch.from_numpy(s1v)).float()
+            input2 = Variable(torch.from_numpy(s2v)).float()
             score = Variable(torch.from_numpy(score)).float()
-            output = cnn(input)
+            # pdb.set_trace()
+            output = cnn(input1, input2, baseline_features)
             loss = criterion(output, score)
             loss_val += loss.data.cpu().numpy()[0]
             res.append(output.data.cpu().numpy()[0][0])
@@ -235,8 +240,13 @@ def main(args):
     loss_val = 0
     for item in data_test:
         s1, s2, score, s1s, s2s = np.array([item[0]]), np.array([item[1]]), np.array([item[2]]), item[3], item[4]
-        input = Variable(torch.from_numpy(extract_emb(s1, s2, wrdvec, id2w))).float()
-        output = cnn(input)
+        s1v, s2v = extract_emb(s1, s2, wrdvec, id2w)
+        baseline_features = extract_baseline_features([s1s], [s2s])
+        baseline_features = Variable(torch.from_numpy(baseline_features)).float()
+        input1 = Variable(torch.from_numpy(s1v)).float()
+        input2 = Variable(torch.from_numpy(s2v)).float()
+        score = Variable(torch.from_numpy(score)).float()
+        output = cnn(input1, input2, baseline_features)
         loss = criterion(output, score)
         loss_val += loss.data.cpu().numpy()[0]
         res.append(output.data.cpu().numpy()[0][0])
@@ -277,7 +287,7 @@ notin_cnt = [0]
 def cnn_embedding(args):
     # load vocab
     w2id, id2w = load_vocab(vpath, V)
-    wrdvec = load_data_pretrain_emb('./data/pretrain-emb.pkl')
+    wrdvec = load_data_pretrain_emb('./data/pretrain-emb.pkl', w2id)
     # load data
     data_train = load_data(args.trainfile, w2id)
     data_test = load_data(args.testfile, w2id)
@@ -287,8 +297,12 @@ def cnn_embedding(args):
     cnt = 0
     for item in data_train:
         s1, s2, s1s, s2s = np.array([item[0]]), np.array([item[1]]), item[3], item[4]
-        input = Variable(torch.from_numpy(extract_emb(s1, s2, wrdvec, id2w))).float()
-        output = cnn(input)
+        baseline_features = extract_baseline_features([s1s], [s2s])
+        baseline_features = Variable(torch.from_numpy(baseline_features)).float()
+        s1v, s2v = extract_emb(s1, s2, wrdvec, id2w)
+        input1 = Variable(torch.from_numpy(s1v)).float()
+        input2 = Variable(torch.from_numpy(s2v)).float()
+        output = cnn(input1, input2, baseline_features)
         res.append(output.data.cpu().numpy()[0][0])
         cnt += 1
         if cnt % 500 == 0:
@@ -299,10 +313,15 @@ def cnn_embedding(args):
         for i in res:
             f.write(str(i) + '\n')
 
+    res = []
     for item in data_test:
         s1, s2, s1s, s2s = np.array([item[0]]), np.array([item[1]]), item[3], item[4]
-        input = Variable(torch.from_numpy(extract_emb(s1, s2, wrdvec, id2w))).float()
-        output = cnn(input)
+        baseline_features = extract_baseline_features([s1s], [s2s])
+        baseline_features = Variable(torch.from_numpy(baseline_features)).float()
+        s1v, s2v = extract_emb(s1, s2, wrdvec, id2w)
+        input1 = Variable(torch.from_numpy(s1v)).float()
+        input2 = Variable(torch.from_numpy(s2v)).float()
+        output = cnn(input1, input2, baseline_features)
         res.append(output.data.cpu().numpy()[0][0])
         cnt += 1
         if cnt % 500 == 0:
@@ -484,7 +503,6 @@ def sentence_similarity_information_content(sentence1, sentence2):
     synsets1 = [ss for ss in synsets1 if ss]
     synsets2 = [ss for ss in synsets2 if ss]
     score, count = 0.0, 0
-    ppdb_score, align_cnt = 0, 0
     # For each word in the first sentence
     for synset in synsets1:
         L = []
@@ -507,6 +525,22 @@ def load_cnn_score(fname):
         for line in f:
             res.append(float(line.strip()))
     return res
+
+def extract_baseline_features(s1, s2):
+    res = []
+    for i in range(len(s1)):
+        st1, st2 = s1[i], s2[i]
+        if st1 == ' ' and st2 == ' ':
+            res.append([0]*11)
+            continue
+        tmp = []
+        tmp.append(extract_overlap_pen(st1, st2))
+        tmp.extend(extract_absolute_difference(st1, st2))
+        tmp.extend(extract_mmr_t(st1, st2))
+        # tmp.append(sentence_similarity_word_alignment(st1, st2))
+        # tmp.append(sentence_similarity_information_content(st1, st2))
+        res.append(tmp)
+    return np.array(res)
 
 def svr(args):
     T0 = time.time()
@@ -596,7 +630,7 @@ def svr(args):
                     , extract_overlap_pen(s1, s2)
                     , *extract_absolute_difference(s1, s2)
                     , *extract_mmr_t(s1, s2)
-                    , test_cnn[i]
+                    , 5-test_cnn[i]
                     ]
         # cosine similarity
         feature_scores.append(scores)
@@ -613,6 +647,6 @@ def svr(args):
 if __name__ == '__main__':
     args = parser.parse_args()
     pp.pprint(args)
-    main(args)
-    cnn_embedding(args)
+    # main(args)
+    # cnn_embedding(args)
     svr(args)
