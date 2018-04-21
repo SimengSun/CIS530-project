@@ -7,3 +7,5 @@ en-all.txt
 pkl2txt.py
 data_preproc.py
 *.bin
+../.DS_Store/*
+../data/.DS_Store/*
