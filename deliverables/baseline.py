@@ -9,6 +9,8 @@ translator = Translator()
 import time
 from nltk.corpus import wordnet_ic
 from gensim.models import KeyedVectors
+from sklearn.ensemble import BaggingRegressor
+from sklearn.model_selection import cross_val_score
 # import pdb
 
 from nltk.corpus import wordnet as wn
@@ -413,8 +415,16 @@ def main(args):
     scaler = sklearn.preprocessing.StandardScaler(); scaler.fit(feature_scores); X_features = scaler.transform(feature_scores)
     print("Elapsed time:",time.time() - T0,"(preprocessing)")
     #clf = LinearRegression(); clf.fit(X_features, true_score)
-    clf = SVR(kernel='linear') # R1 uses default parameters as described in SVR documentation
+    # clf = BaggingRegressor(SVR(kernel='linear'), n_estimators=15) # R1 uses default parameters as described in SVR documentation
+    clf = SVR(kernel='linear')
     clf.fit(X_features, true_score)
+
+
+    # cross validation on SVR parameters here
+    # for c in [0.001, 0.01, 0.1, 1, 10, 100]:
+    #     clf = SVR(kernel='linear', C=c)
+    #     res = cross_val_score(clf, X_features, true_score)
+    #     print (sum(res) / len(res))
 
     #-----------
     # predicting
