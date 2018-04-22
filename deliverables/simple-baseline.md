@@ -1,9 +1,9 @@
 ## Monolingual and multilingual semantic textual similarity
 
 An example for monlingual semantic textual similarity is
-`python3 simple-baseline.py --pairfile ../data/en-train.txt --predfile ../data/pred_en.txt --v 1`
+`python3 simple-baseline.py --pairfile ../data/en-train.txt --predfile ../data/pred_en_val_simple.txt --v 1`
 
-`python3 evaluate.py --goldfile ../data/en-train.txt --predfile ../data/pred_en.txt`
+`python3 evaluate.py --goldfile ../data/en-val.txt --predfile ../data/pred_en_val_simple.txt`
 
 The final baseline correlation (for this monolingual example) is 0.6265.
 
