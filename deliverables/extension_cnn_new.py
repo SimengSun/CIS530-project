@@ -44,7 +44,7 @@ class CNN(nn.Module):
         ks = [2,3,4,5] # kernel size
         Cout = 16
         dropout = 0.4
-        hn = 12
+        hn = 7
         self.conv = nn.ModuleList([nn.Conv2d(Cin, Cout, (k, D)).float() for k in ks])
         self.dropout = nn.Dropout(dropout)
         self.fc = nn.Linear(2*len(ks)*Cout + 11, 1).float()
@@ -192,7 +192,7 @@ def main(args):
     cnn = CNN()
 
     # loss
-    criterion = nn.L1Loss()
+    criterion = nn.SmoothL1Loss()
     optimizer = torch.optim.Adagrad(cnn.parameters(), lr=lr)
 
     # train
@@ -630,7 +630,7 @@ def svr(args):
                     , extract_overlap_pen(s1, s2)
                     , *extract_absolute_difference(s1, s2)
                     , *extract_mmr_t(s1, s2)
-                    , 5-test_cnn[i]
+                    , test_cnn[i]
                     ]
         # cosine similarity
         feature_scores.append(scores)
