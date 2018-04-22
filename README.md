@@ -21,4 +21,4 @@ According to  [^fn1], we compile a summary of literature review in [deliverable
 See [deliverables/baseline.md](deliverables/baseline.md) for our published baseline.
 
 
-[^fn1] [Cer, Daniel, et al. "SemEval-2017 Task 1: Semantic Textual Similarity-Multilingual and Cross-lingual Focused Evaluation." arXiv preprint arXiv:1708.00055 (2017).](https://arxiv.org/abs/1708.00055).
+[^fn1] [Cer, Daniel, et al. "SemEval-2017 Task 1: Semantic Textual Similarity-Multilingual and Cross-lingual Focused Evaluation." arXiv preprint arXiv:1708.00055 (2017)](https://arxiv.org/abs/1708.00055).
