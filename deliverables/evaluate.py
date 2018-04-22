@@ -42,7 +42,7 @@ def main(args):
             gold = [float(g.split()[-1]) for g in gold]
             pred = [float(p.split()[-1]) for p in pred]
             debug5 = [pred[idx] for idx,g in enumerate(gold) if 5 == int(g)]
-            debug0 = [pred[idx] for idx,p in enumerate(pred) if 5 == int(p)]
+            debug0 = [pred[idx] for idx,p in enumerate(pred) if 0 == int(p)]
             print(np.mean(debug5), "average for", len(debug5),"with gs 5.0")
             print(np.mean(debug0), "average for", len(debug0),"with gs 0.0")
     # https://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.stats.pearsonr.html
