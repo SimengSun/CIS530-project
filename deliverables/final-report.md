@@ -1,9 +1,13 @@
 <center>
 #Semantic Textual Similarity
+
 ####Yezheng Li&emsp;&emsp;&emsp;&emsp;&emsp;Danni Ma&emsp;&emsp;&emsp;&emsp;&emsp;Anant Maheshwari&emsp;&emsp;&emsp;&emsp;&emsp;Simeng Sun
+
 </center>
+
 ##Abstract
 Semantic Textual Similarity (STS) measures the meaning similarity of sentences. Applications of this task include machine translation, summarization, text generation, question answering, short answer grading, semantic search, dialogue and conversational systems. We developed Support Vector Regression model with various features including the similarity scores calculated using alignment-based methods and semantic composition based methods. We have also trained sentence semantic representations with BiLSTM and Convolutional Neural Networks (CNN). The correlations between our system output the human ratings were above 0.8 in the test dataset.
+
 ##Introduction
 The goal of this task is to measure semantic textual similarity between a given pair of sentences (what they mean rather than whether they look similar syntactically). While making such an assessment is trivial for humans, constructing algorithms and computational models that mimic human level performance represents a difficult and deep natural language
 understanding (NLU) problem.
@@ -28,14 +32,23 @@ Semantic Textual Similarity (STS) measures the degree of equivalence in the unde
 related but not particularly similar). The task involves producing real-valued similarity scores for sentence pairs. Performance is measured by the Pearson correlation of machine scores with human judgments.
 
 STS is an annual shared task in SemEval since 2012. The STS shared tast data sets have been used extensively for research on sentence level similarity and semantic representations. We have access to STS benchmark which is a new shared training and evaluation set carefully selected from the corpus of English STS shared task data (2012-2017). Over the past five years, numerous participating teams, diverse approaches, and ongoing improvements to state-of-the-art methods have constantly raised the standard of this task.
+
 ##Literature Review
+
 ##Experimental Design
+
 ###Data
+
 ###Evaluation Metric
+
 ###Simple baseline
+
 ##Experimental Results
+
 ###Published baseline
+
 ###Extensions
+
 1. Use InferSent trained sentence embeddings
 
 [InferSent](https://research.fb.com/downloads/infersent/) is a sentence embeddings method that provides semantic sentence representations. It is trained on natural language inference data and generalizes well to many different tasks.
@@ -52,10 +65,12 @@ With the help of InferSent trained sentence representations, the model outperfor
 Table 1: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
-
 ###Error Analysis
+
 ##Conclusions
+
 ##References
+
 [1] Cer et. al, **[SemEval-2017 Task 1: Semantic Textual Similarity
 Multilingual and Cross-lingual Focused Evaluation.](https://www.aclweb.org/anthology/S/S17/S17-2001.pdf)** *In Proceedings of the 11th International Workshop on Semantic Evaluations (SemEval-2017)*
 
@@ -64,5 +79,7 @@ Multilingual and Cross-lingual Focused Evaluation.](https://www.aclweb.org/antho
 [3] Banjade et. al, **[DTSim at SemEval-2016 Task 1: Semantic Similarity Model Including Multi-Level Alignment and Vector-Based Compositional Semantics.](http://www.aclweb.org/anthology/S16-1097)** *In Proceedings of SemEval-2016*
 
 [4] Conneau et. al, **[Supervised Learning of Universal Sentence Representations from Natural Language Inference Data](http://aclweb.org/anthology/D17-1070)** *In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing (EMNLP)*
+
 ##Acknowledgements
+
 ##Appendices
