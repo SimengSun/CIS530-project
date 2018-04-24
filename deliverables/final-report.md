@@ -57,7 +57,7 @@ For the simple baseline, we used an unsupervised approach by creating sentence v
 
 We achieved the following results using the simple baseline: 
 
-|                 | Validation Set                           | Test Set                         |
+|                 | Validation Set |            |            | Test Set |           |           |
 |-----------------|----------------|------------|------------|----------|-----------|-----------|
 |                 | Pearson        | Ave 5(128) | Ave 0(131) | Pearson  | Ave 5(10) | Ave 0(19) |
 | Simple Baseline | 0.428          | 3.274      | 0.532      | 0.633    | 4.088     | 0.623     |
