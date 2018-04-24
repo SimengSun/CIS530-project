@@ -177,7 +177,9 @@ Table: Pearson Correlations between system outputs and human ratings on differen
 
 ### Error Analysis
 
-**** Yezheng Write Here ****
+Altough Pearson correlation is widely used as evaluation criteria in the literature, it is not quite intepretable. We introduce two extra error analysis:
+1. "Ave 5": average over predicted similarities of pairs with gold standard 5.0. The closer "Ave 5" to 5.0, the better the model.
+2. "Ave 0": average over predicted similarities of pairs with gold standard 0.0. closer "Ave 5" to 0.0, the better the model.
 
 ## Conclusions
 
