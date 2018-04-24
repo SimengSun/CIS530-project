@@ -79,7 +79,20 @@ We were able to improve upon our model by a slight amount using this extension:
 | model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
-| baseline + InferSent|**0.7220**       |**0.8104** |
+| baseline + IC       | 0.6226          | 0.7097.   |
+Table: Pearson Correlations between system outputs and human ratings on different models
+</center>
+
+2. Convolution Neural Networks to generate sentence embeddings
+
+**** Simeng write here ****
+
+<center>
+
+| model               | Validation Data | Test Data |
+| ------------------- |:---------------:|:---------:|
+| baseline            | 0.6114          | 0.6989    |
+| baseline + CNN      | 0.6615          | 0.6460    |
 Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
@@ -100,6 +113,8 @@ Table: Pearson Correlations between system outputs and human ratings on differen
 </center>
 
 ### Error Analysis
+
+**** Yezheng Write Here ****
 
 ## Conclusions
 
