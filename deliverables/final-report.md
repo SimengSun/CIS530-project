@@ -38,8 +38,18 @@ STS is an annual shared task in SemEval since 2012. The STS shared tast data set
 ## Experimental Design
 
 ### Data
+We obtained the data by merging data from year 2012 to 2017 SemEval Shared Task. Out of a total of approximately 28000 sentence pairs, we were left with about 15115 sentence pairs (cleaning involved removing sentence pairs without a tab delimiter and pairs with a blank gold score). We split the data into three parts as below. 
+
+Training data: 13365 pairs
+Validation data:  1500 pairs
+Test data: 250 pairs (Same as used by the other teams to test their model in the 2017 task)
+
+#### Data Pre-processing
+
+We used tokenization and lemmatization on the data as a pre-processing step before we turn the data into our models. We chose to do this step as lemmatization does not take away any semantic information from sentences and hence was an essential step for our application.
 
 ### Evaluation Metric
+The official score is based on weighted Pearson correlation between predicted similarity and human annotated similarity. The higher the score, the better the the similarity prediction result from the algorithm.
 
 ### Simple baseline
 
@@ -49,7 +59,21 @@ STS is an annual shared task in SemEval since 2012. The STS shared tast data set
 
 ### Extensions
 
-1. Use InferSent trained sentence embeddings
+1. Resnik Similarity using Information Content from Brown Corpus
+
+We used information content generated from the Brown corpus to compute the resnik similarity between paths in the wordnet trees for the given sentence pairs. This approach uses IC of the Least Common Subsumer (most specific ancestor node) to output a score which is used by the Support Vector Regression model. 
+
+We were able to improve upon our model by a slight amount using this extension:
+<center>
+
+| model               | Validation Data | Test Data |
+| ------------------- |:---------------:|:---------:|
+| baseline            | 0.6114          | 0.6989    |
+| baseline + InferSent|**0.7220**       |**0.8104** |
+Table: Pearson Correlations between system outputs and human ratings on different models
+</center>
+
+3. Use InferSent trained sentence embeddings
 
 [InferSent](https://research.fb.com/downloads/infersent/) is a sentence embeddings method that provides semantic sentence representations. It is trained on natural language inference data and generalizes well to many different tasks.
 
@@ -62,7 +86,7 @@ With the help of InferSent trained sentence representations, the model outperfor
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + InferSent|**0.7220**       |**0.8104** |
-Table 1: Pearson Correlations between system outputs and human ratings on different models
+Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
 ### Error Analysis
@@ -81,5 +105,7 @@ Multilingual and Cross-lingual Focused Evaluation.](https://www.aclweb.org/antho
 [4] Conneau et. al, **[Supervised Learning of Universal Sentence Representations from Natural Language Inference Data](http://aclweb.org/anthology/D17-1070)** *In Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing (EMNLP)*
 
 ## Acknowledgements
+
+We took part in regular meetings with out mentor TA Nitish Gupta who helped us with his thoughts on our ideas and giving us possible directions for our extensions to improve our results. 
 
 ## Appendices
