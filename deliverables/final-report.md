@@ -53,6 +53,16 @@ The official score is based on weighted Pearson correlation between predicted si
 
 ### Simple baseline
 
+For the simple baseline, we used an unsupervised approach by creating sentence vectors with each dimension representing whether an individual word appears in a sentence. The final score is calculated using cosine similairty between the sentence vectors. 
+
+We achieved the following results using the simple baseline: 
+
+|                 | Validation Set                           | Test Set                         |
+|-----------------|----------------|------------|------------|----------|-----------|-----------|
+|                 | Pearson        | Ave 5(128) | Ave 0(131) | Pearson  | Ave 5(10) | Ave 0(19) |
+| Simple Baseline | 0.428          | 3.274      | 0.532      | 0.633    | 4.088     | 0.623     |
+| Gold Standard   | 1              | 5          | 0          | 1        | 5         | 0         |
+
 ## Experimental Results
 
 ### Published baseline
