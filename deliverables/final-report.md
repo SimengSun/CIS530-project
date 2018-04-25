@@ -191,16 +191,18 @@ Altough Pearson correlation is widely used as evaluation criteria in the literat
 2. "Ave 0": average over predicted similarities of pairs with gold standard 0.0. closer "Ave 5" to 0.0, the better the model.
 
 
-|                 | Validation Set |            |            | Test Set |           |           |
-|-----------------|----------------|------------|------------|----------|-----------|-----------|
-|                 | Pearson        | Ave 5(128) | Ave 0(131) | Pearson  | Ave 5(10) | Ave 0(19) |
-| Simple Baseline | 0.428          | 3.274      | 0.532      | 0.633    | 4.088     | 0.623     |
-| Published       | 0.611          | 3.994      | 0.668      | 0.698    | 4.347     | 0.861     |
-| CNN             | 0.661          | 4.030      | 0.569      | 0.646    | 3.767     | 0.561     |
-| LSTM            | 0.722          | 4.076      | 0.258      | 0.810    | 4.427     | 0.516     |
-| Gold Standard   | 1              | 5          | 0          | 1        | 5         | 0         |
+|                    | Validation Set |            |            | Test Set |           |           |
+|--------------------|----------------|------------|------------|----------|-----------|-----------|
+|                    | Pearson         | Ave 5(128) | Ave 0(131) | Pearson  | Ave 5(10) | Ave 0(19) |
+| Simple Baseline    | 0.428          | 3.274      | 0.532      | 0.633    | 4.088     | 0.623     |
+| Published Baseline | 0.611          | 3.994      | 0.668      | 0.698    | 4.347     | 0.861     |
+| CNN                | 0.661          | 4.030      | 0.569      | 0.646    | 3.767     | 0.561     |
+| LSTM               | 0.722          | 4.076      | 0.258      | 0.810    | 4.427     | 0.516     |
+| Gold Standard      | 1              | 5          | 0          | 1        | 5         | 0         |
 
-We can see the trend is that (generally) "Ave 5" and "Ave 0" are improved as Pearson correlation is improved; level of improvement may vary: take Validation Set of CNN and LSTM as an example, "Ave 0" is improved from 0.569 to 0.258 while "Ave 5" is only improved from 4.030 to 4.076.
+Some observations:
+1. We can see the trend is that (generally) "Ave 5" and "Ave 0" are improved as Pearson correlation is improved; level of improvement may vary: take (Validation Set of CNN and LSTM) as an example, "Ave 0" is improved from 0.569 to 0.258 while "Ave 5" is only improved from 4.030 to 4.076.
+2. Since Test Set has only 250 pairs compaired to Validation Set (1500 pairs), we get only 10 pairs with gold standard 5 and only 19 pairs with gold standard 0 -- Test Set's result varies a lot -- take (Test Set of Published and CNN) as an example, Pearson correlation and "Ave 5" drop while "Ave 0" is improved. To conclude, "Ave 5" and "Ave 0" are less convincing since Test Set is not big.
 
 ## Conclusions
 
