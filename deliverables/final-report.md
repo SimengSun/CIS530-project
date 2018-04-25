@@ -117,11 +117,9 @@ For the simple baseline, we used an unsupervised approach by creating sentence v
 
 We achieved the following results using the simple baseline: 
 
-
-|                 | Validation Set |   Test Set |   
-|-----------------|----------------|------------|
-| Simple Baseline | 0.428          | 0.633      |
-| Gold Standard   | 1              | 5          |
+| model               | Validation Data | Test Data |
+| ------------------- |:---------------:|:---------:|
+| Simple baseline     | 0.428           | 0.633     |
 
 ## Experimental Results
 
