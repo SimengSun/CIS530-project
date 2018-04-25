@@ -647,6 +647,6 @@ def svr(args):
 if __name__ == '__main__':
     args = parser.parse_args()
     pp.pprint(args)
-    # main(args)
-    # cnn_embedding(args)
+    main(args)
+    cnn_embedding(args)
     svr(args)
