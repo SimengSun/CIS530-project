@@ -117,7 +117,7 @@ For the simple baseline, we used an unsupervised approach by creating sentence v
 
 We achieved the following results using the simple baseline: 
 
-| model               | Validation Data | Test Data |
+| Model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | Simple baseline     | 0.428           | 0.633     |
 
@@ -136,7 +136,7 @@ The published performance of DT\_Team model on the same test data is 0.8536. How
 
 <center>
 
-| model               | Validation Data | Test Data |
+| Model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | Simple baseline     | 0.428           | 0.633     |
 | Published baseline  | 0.6114          | 0.6989    |
@@ -152,7 +152,7 @@ We used information content generated from the Brown corpus to compute the resni
 We were able to improve upon our model by a slight amount using this extension:
 <center>
 
-| model               | Validation Data | Test Data |
+| Model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + IC       | 0.6226          | 0.7097    |
@@ -173,7 +173,7 @@ The second version is shown below. Unlike the first version, we use CNN to encod
 
 <center>
 
-| model               | Validation Data | Test Data |
+| Model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + CNN      | 0.6615          | 0.6460    |
@@ -189,7 +189,7 @@ We use InferSent to get the embeddings of all the sentences we have. Given a pai
 With the help of InferSent trained sentence representations, the model outperforms baseline model on both validation data and test data:
 <center>
 
-| model               | Validation Data | Test Data |
+| Model               | Validation Data | Test Data |
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + InferSent|**0.7220**       |**0.8104** |
@@ -218,7 +218,7 @@ Some observations:
 
 ## Conclusions
 
-**** Anant Write This **** 
+The state-of-art performs for this particular task is a test score of 0.85 on the test set for 2017. With our baseline features and best performing extension, we were able to reach a score of 0.8104 on the test set. We tried many approaches involving binary bag-of-words, word2vec embeddings, fastext embeddings for en-es cross-lingual pairs and sent2vec embeddings. Binary bag-of-words, although being a very simple model tends to perform very well in general and is a high-performing baseline. We also tried lots of different features involving path-similarity and resnik similarity in wordnet trees for the given sentences. One would hope that CNN's would perform well by capturing semantic information in the generated embeddings but are still unable to beat the best score we obtained. However as shown in the error analysis, CNN does have a good potential on this application and would certainly outperform other models if more data is available. 
 
 ## References
 
