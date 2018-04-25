@@ -17,17 +17,6 @@ Our model is shown as above: the input fed to the CNN is a N-by-2\*D matrix, whe
 
 This model outperforms our baseline model (on old version data)
 
-| model        | Correlation      |
-| ------------- |:-------------:|
-| baseline      | 0.6502 |
-| extension-CNN |  0.7381    |
-
-result on newly organized data:
-
-| model        | Correlation           |
-| ------------- |:-------------:|
-| baseline      |  - |
-| extension-CNN |   -   |
 
 
 # Extension-3
