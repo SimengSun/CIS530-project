@@ -129,7 +129,23 @@ We achieved the following results using the simple baseline:
 
 ### Published baseline
 
-**** Danni Write This ****
+We re-implemented DT\_Team's work[2], as this is the state-of-the-art for monolingual STS task. DT\_Team used linear Support Vector Regression with a set of 7 features. Among them, two were only compatible with Windows, and one feature did not improve the performance at all, so we re-implemented four of them. Details are below.
+
+1. **Unigram Overlap**: Count the unigram overlap between sentence A and sentence B, with synonym check. Then Calculate the ration of overlap count over the total length of two sentences.
+2. **Word Alignment**: Look for each word of sentence A in Wordnet, we can get a synonym set (synset). We align this word with a corresponding one in sentence B by using path similarity in Wordnet trees. The labeled alignments are used as one useful feature.
+3. **Absolute Difference**: Let Cta and Cta be the counts of tokens of type t ∈ {all tokens, adjectives, adverbs, nouns, and verbs} in sentence A and B respectively. We calculate the absolute difference as |Cta−Ctb|/(Cta+Ctb).
+4. **Min to Max Ratio**: Let Ct1 and Ct2 be the counts of type t ∈ {all, adjectives, adverbs, nouns, and verbs} for shorter Sentence 1 and longer Sentence 2 respectively. We calculate the minimum to maximum ratio Ct1/Ct2 as one feature.
+
+The published performance of DT\_Team model on the same test data is 0.8536. However, we could only achieve 0.6989 after re-implementation. One reason is that there are two features which might be useful, but we did not use due to operating system compatibility. It is also possible that DT\_Team had some pre-processed steps which they did not illustrate very specifilly in the paper, and we did not fully implemented them.
+
+<center>
+
+| model               | Validation Data | Test Data |
+| ------------------- |:---------------:|:---------:|
+| Simple baseline     | 0.428           | 0.633     |
+| Published baseline  | 0.6114          | 0.6989    |
+Table: Pearson Correlations between system outputs and human ratings on different models
+</center>
 
 ### Extensions
 
