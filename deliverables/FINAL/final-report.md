@@ -144,6 +144,7 @@ The published performance of DT\_Team model on the same test data is 0.8536. How
 | ------------------- |:---------------:|:---------:|
 | Simple baseline     | 0.428           | 0.633     |
 | Published baseline  | 0.6114          | 0.6989    |
+
 Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
@@ -160,6 +161,7 @@ We were able to improve upon our model by a slight amount using this extension:
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + IC       | 0.6226          | 0.7097    |
+
 Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
@@ -181,6 +183,7 @@ The second version is shown below. Unlike the first version, we use CNN to encod
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + CNN      | 0.6615          | 0.6460    |
+
 Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
@@ -197,6 +200,7 @@ With the help of InferSent trained sentence representations, the model outperfor
 | ------------------- |:---------------:|:---------:|
 | baseline            | 0.6114          | 0.6989    |
 | baseline + InferSent|**0.7220**       |**0.8104** |
+
 Table: Pearson Correlations between system outputs and human ratings on different models
 </center>
 
@@ -211,9 +215,9 @@ Altough Pearson correlation is widely used as evaluation criteria in the literat
 |--------------------|----------------|------------|------------|----------|-----------|-----------|
 |                    | Pearson         | Ave 5(128) | Ave 0(131) | Pearson  | Ave 5(10) | Ave 0(19) |
 | Simple Baseline    | 0.428          | 3.274      | 0.532      | 0.633    | 4.088     | 0.623     |
-| Published Baseline | 0.611          | 3.994      | 0.668      | 0.698    | 4.347     | 0.861     |
-| CNN                | 0.661          | 4.030      | 0.569      | 0.646    | 3.767     | 0.561     |
-| LSTM               | 0.722          | 4.076      | 0.258      | 0.810    | 4.427     | 0.516     |
+| Published Baseline | 0.611          | 3.994      | 0.668      | 0.698    | **4.347** | 0.861     |
+| CNN                | 0.661          | **4.030**  | **0.569**  | 0.646    | **3.767** | 0.561     |
+| LSTM               | 0.722          | **4.076**  | **0.258**  | 0.810    | 4.427     | 0.516     |
 | Gold Standard      | 1              | 5          | 0          | 1        | 5         | 0         |
 
 Some observations:
