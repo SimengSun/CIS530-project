@@ -34,8 +34,7 @@ STS is an annual shared task in SemEval since 2012. The STS shared tast data set
 
 ## Literature Review
 
-**** Anant Polish this ****
-
+The following paper summarizes the task for semantic textual similarity with a summary of each team's model which performed well in the competition. We try to review a few of those here.
 [Cer, Daniel, et al. "SemEval-2017 Task 1: Semantic Textual Similarity-Multilingual and Cross-lingual Focused Evaluation." arXiv preprint arXiv:1708.00055 (2017).](https://arxiv.org/abs/1708.00055).
 
 
@@ -82,8 +81,8 @@ similarity approach. In Proceedings of SemEval-2017.](http://www.aclweb.org/anth
 
 6. LIM_LIG
 - **[Ferrero, Jérémy, and Didier Schwab. "LIM-LIG at SemEval-2017 Task1: Enhancing the Semantic Similarity for Arabic Sentences with Vectors Weighting." International Workshop on Semantic Evaluations (SemEval-2017). 2017.](https://hal.archives-ouvertes.fr/hal-01531255/)**
-- CBOW model is the basic idea for word embeddings, with some modification. Besides idf weights, this manuscript includes POS weights which is unique to me. 
-- From word embeddings to sentence embeddings, they use sum of vectors (which is strange to me).
+- CBOW model is the basic idea for word embeddings, with some modification. Besides idf weights, this manuscript includes POS weights.
+- From word embeddings to sentence embeddings, they use sum of vectors.
 
 7. DT_Team
  - **[Maharjan, Nabin, et al. "DT_Team at SemEval-2017 Task 1: Semantic Similarity Using Alignments, Sentence-Level Embeddings and Gaussian Mixture Model Output." Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017). 2017.](http://www.aclweb.org/anthology/S17-2014)**
@@ -119,11 +118,10 @@ For the simple baseline, we used an unsupervised approach by creating sentence v
 We achieved the following results using the simple baseline: 
 
 
-
 |                 | Validation Set |   Test Set |   
-|-----------------|----------------|------------|------------|----------|-----------|-----------|
+|-----------------|----------------|------------|
 | Simple Baseline | 0.428          | 0.633      |
-| Gold Standard   | 1              | 5          | 0          | 1        | 5         | 0         |
+| Gold Standard   | 1              | 5          |
 
 ## Experimental Results
 
