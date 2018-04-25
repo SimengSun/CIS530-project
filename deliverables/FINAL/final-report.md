@@ -165,7 +165,7 @@ Table: Pearson Correlations between system outputs and human ratings on differen
 
 2. Convolution Neural Networks to generate sentence embeddings
 
-![alt text](https://raw.githubusercontent.com/SimengSun/CIS530-project/master/deliverables/images/cnn-model.png "cnn-model")
+![alt text](https://raw.githubusercontent.com/SimengSun/CIS530-project/master/deliverables/FINAL/images/cnn-model.png "cnn-model")
 
 The 2nd extension we implemented is a Convolutional neural network, which produces dense representation of sentences as by-product. We have two version of CNN model for this extension.
 
@@ -173,7 +173,7 @@ The first version is shown above. We stack the two sentence together by column a
 
 The second version is shown below. Unlike the first version, we use CNN to encode each sentence separately and concatenate two sentence embedding and baseline features, then feed this new vector into a linear regression model. This model performs better than the last one, the best result we got is shown in the table below.
 
-![alt text](https://raw.githubusercontent.com/SimengSun/CIS530-project/master/deliverables/images/cnn-model-1.png "cnn-model-1")
+![alt text](https://raw.githubusercontent.com/SimengSun/CIS530-project/master/deliverables/FINAL/images/cnn-model-1.png "cnn-model-1")
 
 <center>
 
