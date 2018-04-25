@@ -1,4 +1,4 @@
 ppdb-2.0-l-lexical
 *.bin
-../.DS_Store/*
-../data/.DS_Store/*
+.DS_Store
+.DS_Store?
