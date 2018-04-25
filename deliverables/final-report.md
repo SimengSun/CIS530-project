@@ -75,24 +75,24 @@ similarity approach. In Proceedings of SemEval-2017.](http://www.aclweb.org/anth
  This paper computes a sense-base alignment using BabelNet and took fifth place overall. BabelNet synsets are multilingual allowing non-English and cross-lingual pairs to be processed similarly to English pairs. Alignment similarity scores are used with two runs: one that combines the scores within a string kernel and another that relied on the proportions of the aligned content words on the two sentences. Both runs average the Babelnet based scores with soft-cardinality. Specifically, the authors set the similarity score by taking the arithmetic mean of: 1) sim<sub>proposed</sub>: a proposed sentence-pair semantic similarity score, and 2) sim<sub>SC</sub>: the surfaced-based similarity function. They pre-processed multilingual input sentences with four different tasks: tokenization, stopwords removal, lemmatization and sense tagging.
 
 5. Compi_LIG
-- **[Ferrero, Jérémy, et al. "CompiLIG at SemEval-2017 Task 1: Cross-language plagiarism detection methods for semantic textual similarity." arXiv preprint arXiv:1704.01346 (2017).](https://arxiv.org/pdf/1704.01346.pdf)**
+**[Ferrero, Jérémy, et al. "CompiLIG at SemEval-2017 Task 1: Cross-language plagiarism detection methods for semantic textual similarity." arXiv preprint arXiv:1704.01346 (2017).](https://arxiv.org/pdf/1704.01346.pdf)**
 - Their system combined syntax-based, dictionary-based, context-based and MT-based methods in both supervised and unsupervised way. For syntactical method, they compute cosine similarity of n-gram representation of two sentences; for dictionary-based method, two sets of words for another language can be obtained from Google Translate, then the summation of  weighted Jaccard distance of such set is used to compute the final score; for context-based method, they use weighted distributed representation of words as sentence embedding and compute cosine similarity, where the weights are computed in dictionary-based method; for MT-based approach, they use monolingual aligner to get aligned utterances and measure a variation of jaccard distance based on inverse document frequency of aligned utterances.
 
 
 6. LIM_LIG
-- **[Ferrero, Jérémy, and Didier Schwab. "LIM-LIG at SemEval-2017 Task1: Enhancing the Semantic Similarity for Arabic Sentences with Vectors Weighting." International Workshop on Semantic Evaluations (SemEval-2017). 2017.](https://hal.archives-ouvertes.fr/hal-01531255/)**
+**[Ferrero, Jérémy, and Didier Schwab. "LIM-LIG at SemEval-2017 Task1: Enhancing the Semantic Similarity for Arabic Sentences with Vectors Weighting." International Workshop on Semantic Evaluations (SemEval-2017). 2017.](https://hal.archives-ouvertes.fr/hal-01531255/)**
 - CBOW model is the basic idea for word embeddings, with some modification. Besides idf weights, this manuscript includes POS weights.
 - From word embeddings to sentence embeddings, they use sum of vectors.
 
 7. DT_Team
- - **[Maharjan, Nabin, et al. "DT_Team at SemEval-2017 Task 1: Semantic Similarity Using Alignments, Sentence-Level Embeddings and Gaussian Mixture Model Output." Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017). 2017.](http://www.aclweb.org/anthology/S17-2014)**
+**[Maharjan, Nabin, et al. "DT_Team at SemEval-2017 Task 1: Semantic Similarity Using Alignments, Sentence-Level Embeddings and Gaussian Mixture Model Output." Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017). 2017.](http://www.aclweb.org/anthology/S17-2014)**
  - unsupervised and supervised learning;
  - POS-tagging, name-entity recognition as well as  normalization, tokenization, lemmatization are preprocess procedure for word embeddings;
  - From word embeddings to sentence embeddings, this manuscript describes (interesting to me) word alignment; then the similarity score was computed as the sum of the scores for all aligned word-pairs divided by the total length of the given sentence pair.
 
 
 8. sent2vec
- - **[Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).](https://arxiv.org/abs/1703.02507)**
+**[Pagliardini, Matteo, Prakhar Gupta, and Martin Jaggi. "Unsupervised learning of sentence embeddings using compositional n-gram features." arXiv preprint arXiv:1703.02507 (2017).](https://arxiv.org/abs/1703.02507)**
  - This is unsupervised learning (not using true similarities in gs file) with similarities of each pair just from cosine similarity of sentence embeddings. The sentence embeddings is sent2vec.
 
 ## Experimental Design
@@ -132,7 +132,7 @@ We re-implemented DT\_Team's work[2], as this is the state-of-the-art for monoli
 3. **Absolute Difference**: Let Cta and Cta be the counts of tokens of type t ∈ {all tokens, adjectives, adverbs, nouns, and verbs} in sentence A and B respectively. We calculate the absolute difference as |Cta−Ctb|/(Cta+Ctb).
 4. **Min to Max Ratio**: Let Ct1 and Ct2 be the counts of type t ∈ {all, adjectives, adverbs, nouns, and verbs} for shorter Sentence 1 and longer Sentence 2 respectively. We calculate the minimum to maximum ratio Ct1/Ct2 as one feature.
 
-The published performance of DT\_Team model on the same test data is 0.8536. However, we could only achieve 0.6989 after re-implementation. One reason is that there are two features which might be useful, but we did not use due to operating system compatibility. It is also possible that DT\_Team had some pre-processed steps which they did not illustrate very specifilly in the paper, and we did not fully implemented them.
+The published performance of DT\_Team model on the same test data is 0.8536. However, we could only achieve 0.6989 after re-implementation. One reason is that there are two features which might be useful, but we did not use due to operating system compatibility. It is also possible that DT\_Team had some pre-processed steps which they did not illustrate very specifilly in the paper, and we did not fully implement them. However, we focus on our extensions in an attempt to reach close to the state of the art performance.
 
 <center>
 
@@ -234,5 +234,3 @@ Multilingual and Cross-lingual Focused Evaluation.](https://www.aclweb.org/antho
 ## Acknowledgements
 
 We took part in regular meetings with out mentor TA Nitish Gupta who helped us with his thoughts on our ideas and giving us possible directions for our extensions to improve our results. 
-
-## Appendices
